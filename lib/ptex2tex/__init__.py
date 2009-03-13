@@ -258,9 +258,11 @@ class _Ptex2tex:
                 if len(regex[0]) > 0:
                     if len(regex) > 2:
                         whole = True
-                    startexp = regex[0].strip(); 
+                    startexp = regex[0].strip();
+                    startexp = startexp.replace('~', ' ')
                     if len(regex[1].strip()) > 1:
                         stopexp = regex[1]
+                        stopexp = stopexp.replace('~', ' ')
 		    else:
 			stopexp = ""
                     if self.verbose: print startexp, stopexp

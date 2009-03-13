@@ -1,3 +1,12 @@
+Version 0.31
+============
+
+- Added support for specifying spaces rounde start and stop keywords
+  for @@@CODE and @@@DATA. Use '~' character.
+
+Version 0.3
+============
+
 - In case preprocess is unavailable, print message and continue, do not exit.
 
 - CODE gives an error, not throw an exception, when 'to' or 'from' 

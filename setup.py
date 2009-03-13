@@ -15,7 +15,7 @@ latex_dir = os.path.join('share', 'texmf', 'tex', 'latex', name)
 data_files = [(latex_dir, latex_files)]
 
 out = setup(name=name,
-            version="0.2",
+            version="0.31",
             description="A filter for converting from .p.tex to .tex format",
             author="Ilmar M. Wilbers",
             author_email="ilmarw@simula.no",
