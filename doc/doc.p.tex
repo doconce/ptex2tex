@@ -1,0 +1,770 @@
+%\documentclass[envcountsect]{lncse}
+\documentclass[a4paper,11pt]{article}
+\usepackage{ptex2tex}
+\begin{document}
+% TITLE: ptex2tex tutorial\n
+% AUTHOR: Ilmar M. Wilbers, Simula Research Laboratory, Univ. of Oslo\n
+% DATE: Mar 25, 2008\n
+
+\section{Introduction}
+\subsection{What is Ptex2tex?}
+Ptex2tex is a tool that allows you to replace \LaTeX~environment declarations
+with simple keywords. Say that you are writing a book or an article, and there
+is a certain style of box that you use frequently. The annoying thing is that
+this box has a lot of \LaTeX~syntax connected with it in order for it to look like
+the way you want it to. Let's look at an example involving a black box:
+\bpy
+import sys; print 'script name is', sys.argv[0]
+\epy
+The \LaTeX~source code for this box looks as follows:
+\bdat
+\bpy
+import sys; print 'script name is', sys.argv[0]
+\epy
+\edat
+With Ptex2tex the box expands as a certain environment, e.g. \code{mybox}:
+\bdat
+\bmybox
+import sys; print 'script name is', sys.argv[0]
+\emybox
+\edat
+Now, we can define what type of box we want in a configuration file. The
+Ptex2tex approach allows much less code, and makes it easier to concentrate on the contents
+of the document we are writing and not the \LaTeX~code necessary to create such
+a box. Suppose you want the box to have a complete different look:
+\bmata
+import sys; print 'script name is', sys.argv[0]
+\emata
+which in pure \LaTeX~looks like:
+\begin{SaveVerbatim}{tmp2}
+\vspace{4pt}
+\begin{Verbatim}[numbers=none,frame=lines,label=\fbox{Code},
+fontsize=\footnotesize,labelposition=topline,framesep=2.5mm,
+framerule=1pt]
+import sys; print 'script name is', sys.argv[0]
+\end{Verbatim}
+\end{SaveVerbatim}
+\begin{shadedquotedat}
+\fontsize{9pt}{9pt}
+\UseVerbatim{tmp2}
+\end{shadedquotedat}
+\noindent
+Using plain \LaTeX, you would have to replace the \LaTeX~code, which in this
+case is located both before and after the code you want to display. In
+addition, you may have several hundred boxes throughout your document. Changing
+all the \LaTeX~code for these boxes would require a lot of work, even if you
+use search and replace in your editor. Using Ptex2tex you could
+simply swap \code{mybox} with \code{yourbox}, or change the configuration file
+accordingly if the change is to be made for all boxes using this style.
+In this way, you do not need to
+make any changes to your document itself at all!
+
+Another major advantage of Ptex2tex is that it provides means to include text from files as well as
+output from programs ran at the commandline at compile time. Say
+that you are writing a book about programming or a manual for a programming
+tool. You frequently include computer program
+code in your document, and also the output of running programs. While writing
+the document, you might make changes to programs and the output of
+them. Instead of cutting and pasting both the actual program and the output
+every time it is changed, using Ptex2tex, the only thing you need to do
+is to run \code{ptex2tex} on the document. Let's look at an example. We
+include the following in the \code{.p.tex} document:
+\bdat
+ @@@CODE division.py def@if
+ The output from running this function with a=2 and b=0 is:
+ @@@CMD python division.py #0
+\edat
+Now, the file \code{division.py} itself as well as the output from running it
+will be included in our document, and the result looks as follows:\\
+\line(1,0){374}\\
+@@@CODE division.py def@if
+The output from running this function with a=2 and b=0 is:
+@@@CMD python division.py #0
+\line(1,0){374}\\
+ \\
+This makes Ptex2tex a very convenient tool when writing large \LaTeX~documents about software.
+
+\subsection{Motivation.}
+Why do we not simply define \LaTeX~environments and use these directly in our
+files? We consider Python more powerful and convenient than \LaTeX~for
+generating environments. Also, including text from file using search
+expressions as well as
+including results from programs ran at the commandline are very challenging, if
+not impossible, tasks in \LaTeX. Imagine that you want to include a certain
+paragraph or code block from a file. Using plain \LaTeX~this means copying the
+necessary text from the source file, and pasting it into the \LaTeX~file. If
+you make changes to the file you copied from, you have to remember to copy the
+text you need a second time. Even though there exist ways of including whole
+files in \LaTeX~(\code{verbatiminput}), it is very difficult to include a part
+of the file. Also, you might want the text to be included to
+be typeset in a certain way, something that cannot be achieved by a simple
+\code{verbatiminput}. The point is that even though these things \emph{could}
+be done in \LaTeX~using classes, for instance, writing them in Python is much
+easier. As Ptex2tex uses Python configuration files to define commands, one does not even have to
+know Python in order to extend and tailor Ptex2tex.
+
+\subsection{Structure of this tutorial.}
+This tutorial is divided in four sections. Following the introduction is a
+section about preprocessor statements, followed by a section on including files
+and output from program execution. Finally, we will explain how the
+Ptex2tex environments work and how we can configure them.
+
+\section{The prepocessing step}
+It is important that the extension of the files we are working with is
+\code{.p.tex}. In this way, all (most) editors recognize the files as normal
+\LaTeX~files, with all advantages implied.
+We will start by looking at what happens when we run the command
+\code{ptex2tex test.p.tex} on the commandline. If the extension of
+the file is not \code{.p.tex}, the program will exit with an error
+message. If no extension is given, that is, we run \code{ptex2tex test}, it
+is assumed that we are looking for the file \code{test.p.tex}.
+
+% #define INCLUDE_PREPROCESS 1
+% #ifdef INCLUDE_PREPROCESS
+The first step of Ptex2tex consists of running Trent Mick's \code{preprocessor}. This is a Python
+package that allows us to use preprocessor statements in files, just like the
+preprocessor statements that are known from the \code{C} language. These
+statements take the form of normal comments in the source file, but when
+running \code{preprocessor}, these are treated in a special way. For
+instance, we can include whole files, or include certain blocks of
+test or code in our file only when a special requirement is met, otherwise this text
+or code is ignored. The statements need to be on a
+separate line. The statements that are implemented in the current version
+(which is 1.1.0 as of January 2009), are:
+\begin{itemize}
+\item
+\code{% #define VAR [VALUE]}
+\item
+\code{% #undef VAR}
+\item
+\code{% #ifdef VAR}
+\item
+\code{% #ifndef VAR}
+\item
+\code{% #if EXPRESSION}
+\item
+\code{% #elif EXPRESSION}
+\item
+\code{% #else}
+\item
+\code{% #endif}
+\item
+\code{% #error ERROR_STRING}
+\item
+\code{% #include "FILE"}
+\end{itemize}
+The source code for the present document, \code{doc.p.tex}, includes a few of these
+statements as an example. (For now, it is not possible to include arguments to
+\code{preprocess} within Ptex2tex, meaning that only the input file and output
+file are specified, with an additional argument to force the preprocessing
+ by using the \code{-f} flag for \code{preprocess}). For further documentation, please
+visit the website for this
+package\footnote{\texttt{http://trentm.com/projects/preprocess}}. The input file
+type to \code{preprocess} is \code{.p.tex} and the output is \code{.tmp1}.  If
+\code{preprocess} is not available on the system, this step is skipped. Preprocessor
+statements in the file will then be treated as comments, and the file is
+copied directly to \code{.tmp1}.
+% #else
+Information about the preprocess stage is left out.
+% #endif
+
+\section{Including files and output from program execution}
+The second step is to examine and execute the Ptex2tex keywords for
+including files and for including the output from executed programs. For both
+these two stages, the input file type will be \code{.tmp1} and the output file
+type is \code{.tmp2}.
+
+\subsection{\texttt{@@@CODE}.}
+A line \emph{starting} with this statement indicates that a file containing a program
+(that is, computer code) is to be included in the document. If there is only
+one argument after the statement (the file name), the whole file is included. If a second
+argument is included, it is split with respect to the character
+\code{'@'}. If only an expression in front of this character is given, 
+only the part of the file starting with that
+argument and ending with the end of the file is included. If an expression
+after the character is given as well, the part of the file starting with the
+first expression and ending at the beginning of the second expression is
+included. This means that the included part ends \emph{before} the text in the second
+expression, hence that text is \emph{not} included. When searching the file, the
+first occurrence of the start expression is used. Ptex2tex then starts scanning
+for the stop expression from the beginning of the location of the start expression,
+which will denote the end of the
+region to be copied into the text. White-spaces in front of and at the end of the
+expressions before and after \code{'@'} are ignored.
+
+The searching in the file for start and stop expressions is done using the
+Python function \code{find} on strings. Hence, start/stop expressions are
+compared directly to the text in the file. 
+% #define INCLUDE_CTEX 0
+% #ifdef INCLUDE_CTEX
+In the \code{ctex2tex} script,
+which Ptex2tex is based on, regular expressions were used.
+% #endif
+
+The environment keys 'pro'
+and 'sni' are short for 'Program' and 'Snippet', respectively, indicating that
+the former is meant to be used for typesetting a complete program, whereas the
+latter is meant for a program snippet, for instance a function. Both these
+Ptex2tex environments are for typesetting code. Environment keys
+here means keywords that Ptex2tex substitutes with actual \LaTeX~code
+later. More information about Ptex2tex environments is given in section \ref{sec:config}.
+If the whole file is included, the Ptex2tex environment key 'pro' is used. Otherwise,
+the environment key 'sni' is used. An exception here is in the case that a
+second \code{'@'} is used after the stop expression. This indicates that the 'pro'
+environment key is to be used, instead of 'sni'. The reason one might wish to
+typeset only a part of a file as a full program, is that one can use the
+search expressions for removing details in the full program, such as headers
+and test functions, that are irrelevant or confusing in the document, but
+still are considered important for the actual program.
+
+It is important to differ between the \code{@@@CODE} statement and the include
+statement provided with the \code{preprocessor} package. The latter allows us to
+include a file by \code{% #include FILE}, but does not embed the copied text
+in special \LaTeX~environments, that is, the whole file is included as is.
+
+We will exemplify this for the file \code{myprog.py}. 
+Let's look at the output of some different options:\\
+\code{'@@@CODE myprog.py'}
+includes the whole file:
+@@@CODE myprog.py
+\code{'@@@CODE myprog.py def myfunc'} and \code{'@@@CODE myprog.py def myfunc @'}
+includes everything from the first instance of the string 'def myfunc'
+to the end of the file:
+@@@CODE myprog.py def myfunc @
+\code{'@@@CODE myprog.py if isinstance@elif'}
+includes everything from the first instance of the string 'if isinstance'
+\emph{up to} , but not including, the first instance of 'elif' \emph{after} 'if isinstance'.
+@@@CODE myprog.py if isinstance@elif
+
+\subsection{\texttt{@@@DATA}.}
+\code{@@@DATA} is essentially the same as \code{@@@CODE}, but different environment keys are used:
+'pro' becomes 'dat' and 'sni' becomes 'dsni'. These are short for 'Data' and
+'Data snippet', respectively. Whereas \code{@@@CODE}
+is meant to be used with program code, \code{@@@DATA} is meant to be used with
+data files that are not code, for instance input files to, and output files
+from, computer programs.
+
+\subsection{\texttt{@@@CMD}.}
+A line \emph{starting} with the statement \code{@@@CMD} indicates that we want to include
+the output from a shell command with commandline arguments. All text after
+the statement \code{@@@CMD} will be executed, except the text after (and including)
+\code{'#'}. The character after \code{'#'} defines how much of the commands we
+want to execute should be part of the final text to be included in our
+document. Any whitespaces after the character are ignored. There are five possible values:
+\begin{enumerate}
+\item
+\code{'0'} omits the whole command that is to be executed
+\item
+\code{'1'} the command is included and the full path stripped
+\item
+\code{'2'} the command is included and the full path is not stripped
+\item
+\code{'3'} the command is included except for the name of the program being
+called (the first word) and the full path is stripped
+\item
+\code{'4'} the command is included except for the name of the program being
+called (the first word) and the full path is not stripped. 
+\end{enumerate}
+For options \code{'1'} and \code{'3'} a simple regular expression search is used
+to allow statements like \code{'python code/myprog.py'}
+to be printed as \code{'python myprog.py'} and \code{'myprog.py'},
+respectively, that is, we remove the path to the directory where
+the program is located, allowing us to run programs in a different directory
+than where we are running Ptex2tex, without the output reflecting this.
+For options \code{'3'} and \code{'4'} the first word is simply stripped,
+allowing statements like \code{'python code/myprog.py'} to be printed as \code{'myprog.py'}
+and \code{'code/myprog.py'}, respectively. The default option is \code{'3'},
+and the terminal session is typeset using the environment key 'sys' ('System').
+
+Again, let us exemplify this. Running \code{'python myprog.py -1 2 -5'} in a
+shell gives us the following output:
+@@@CMD python myprog.py -1 2 -5 #0
+Instead of copying and pasting this into the documents we are creating,
+meaning we would have to update this every time the code in \code{myprog.py}
+is changed, we simply add the following line:
+\code{'@@@CMD python myprog.py -1 2 -5'}. The result looks like this:
+@@@CMD python myprog.py -1 2 -5
+Before looking at the additional options, let us assume that the file
+\code{myprog.py} is located in a subfolder \code{myfolder}, meaning that
+we would have to run the command \code{'python myfolder/myprog.py -1 2 -5'}.
+Adding additional options to this commands gives the following results:\\
+\code{'@@@CMD python myfolder/myprog.py -1 2 -5 # 0'} omits the whole command
+that is called:
+@@@CMD python myfolder/myprog.py -1 2 -5 # 0
+\code{'@@@CMD python myfolder/myprog.py -1 2 -5 # 1'} removes the additional folders:
+@@@CMD python myfolder/myprog.py -1 2 -5 # 1
+\code{'@@@CMD python myfolder/myprog.py -1 2 -5 # 2'} doesn't remove anything:
+@@@CMD python myfolder/myprog.py -1 2 -5 # 2
+\code{'@@@CMD python myfolder/myprog.py -1 2 -5 # 3'} removes the additional
+folders and the first word after \code{'@@@CMD'} (which is \code{'python'}):
+@@@CMD python myfolder/myprog.py -1 2 -5 # 3
+\code{'@@@CMD python myfolder/myprog.py -1 2 -5 # 4'} removes only the first
+word after \code{'@@@CMD'}:
+@@@CMD python myfolder/myprog.py -1 2 -5 # 4
+
+We give a table with an overview of the different Ptex2tex environments
+that the \code{@@@} keywords are mapped to in Table \ref{table:env}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}[h]{|l|r|}
+  \hline
+  Keyword & Ptex2tex key\\
+  \hline
+  @@@CODE without search expressions & pro\\
+  @@@CODE with \code{start} or \code{start@} & sni\\
+  @@@CODE with \code{start@stop} & sni\\
+  @@@CODE with \code{start@@} & pro\\
+  @@@CODE with \code{start@stop@} & pro\\
+  @@@DATA without search expressions & dat\\
+  @@@DATA with \code{start} or \code{start@} & dsni\\
+  @@@DATA with \code{start@stop} & dsni\\
+  @@@DATA with \code{start@@} & dat\\
+  @@@DATA with \code{start@stop@} & dat\\
+  @@@CMD  with any parameters & sys\\
+  \hline
+\end{tabular}\caption{Mapping of keywords to environments}\label{table:env}
+\end{center}
+\end{table}
+
+\section{Ptex2tex environments}\label{sec:config}
+This section explains the use of the Ptex2tex
+environments. Ptex2tex environments consist of text that we want to
+typeset in a special way (typical computer code), surrounded by keywords for
+defining the beginning and the end of the text to be
+typeset. Ptex2tex replaces these keywords with the \LaTeX~commands
+that we have configured the Ptex2tex environment in question to be
+associated with. We will now explain this in more detail.
+
+\subsection{How to use the environments.}
+Ptex2tex environments are described by several keywords. In the
+previous section we looked at the ones starting with \code{'@@@'}, and
+explained that these keywords were replaced with different Ptex2tex
+environment keys. These environment keys can have different names, we already
+encountered 'pro', 'sni', 'dat', and 'sys'. These are environment keys that are
+built into Ptex2tex and need to be there, as they are used for the
+\code{'@@@'} keywords, but we can define what the \LaTeX~environment they are
+translated to should look like, as we
+will see shortly. In addition, we can add any new environment keys as we
+please, and some are already defined by default.
+
+Let us have a closer look at the environment key 'pro'. For every environment
+key, two keywords can be used in the document we are working with. For 'pro'
+these would be \code{\}\code{bpro} to indicate where we want to start the
+typesetting for that environment, and the other is \code{\}\code{epro},
+indicating the end. In general, for an environment key 'xxx' there will be
+keywords \code{\}\code{bxxx} and \code{\}\code{exxx} where 'b' and 'e' stand
+for 'begin' and 'end', respectively. When Ptex2tex is scanning the
+documents, these two keywords are replaced with the actual \LaTeX~code that
+makes up the environment. Let us once again look at an example. The lines
+\bdat
+ \bpro
+ //This text is typeset as computer code.
+ \epro
+\edat
+will result in the following box:
+\bpro
+//This text is typeset as computer code.
+\epro
+The advantage is that we now can change the way this box should look like
+without making any changes in the document itself, as described in the next
+section. Also, if we want to change the environment to be used, say for
+instance from 'pro' to 'sys', instead of changing up to several lines of
+\LaTeX~code, we simply change the keywords from  \code{\}\code{bpro} and
+\code{\}\code{epro} to \code{\}\code{bsys} and \code{\}\code{esys}.
+This step results in a \code{.tex} file that can be compiled with \LaTeX. In
+the next section we show more of the details behind the environment keys.
+
+\subsection{Configuration file.}\label{sec:conffile}
+As mentioned earlier, the idea of Ptex2tex is to allow the user to write short keywords for
+parts of the document that are to be typeset in a special way. When running
+Ptex2tex, these keywords are then replaced with the full
+\LaTeX~commands, resulting in plain \code{.tex} files. For instance will the
+keyword \code{\}\code{bpy} be replaced with
+\bdat
+\bpy
+\edat
+and
+\code{\}\code{epy} with
+\bdat
+\epy
+\edat
+Some keywords will also output additional \LaTeX~code for defining
+\LaTeX~environments once for every file, more on this later. We will differentiate
+between Ptex2tex environments, which we are about to explain in detail,
+and \LaTeX~environments, which refer to the \LaTeX~commands that we would
+have to use instead of the Ptex2tex keywords.
+
+All Ptex2tex environments available are defined in a configuration
+file. When running Ptex2tex for the first
+time, or if the file is removed since the last time Ptex2tex was run,
+this configuration file will be placed in the user's home directory. The file
+is named \code{.ptex2tex.cfg}, indicating that it is hidden. The file is
+written in the Python ConfigParser
+language\footnote{http://docs.python.org/lib/module-ConfigParser.html} and
+will be referred to as the global environment file.
+This file is read every time one runs Ptex2tex. In addition to
+this file, the \code{.ptex2tex.cfg} file in the directory where the \code{.p.tex}
+file currently being processed is located, is also evaluated, if it exists. This file is
+referred to as the local environment file. The global environment
+file is evaluated first, and then the local one. This means that if a
+specific environment is defined both in the global and local environment
+files, the environment from the local file will overwrite the one from the
+global file.
+
+In this way, one can make changes to an environment that will only affect the
+local \code{.p.tex} files. At the same time, one can make changes to the
+global file, but these changes will only matter if the environment it concerns
+is not overwritten in the local environment files. One can thus add
+environments to the global file and they will be available when running Ptex2tex
+from any location. 
+
+The configuration file is made up of different sections, one for each
+environment and one for the mapping of environment keys to the
+corresponding environment. Each environment can contain the following options:
+\bdat
+breplace
+ereplace
+newenv
+define
+fontsize
+bstretch
+\edat
+Here is an example where all these options are used:
+\bdsni
+[Program]
+define   = True
+newenv   = \providecommand{\shadedquote}{}
+           \renewenvironment{shadedquote}[1][]{
+           \definecolor{shadecolor}{rgb}{0.87843, 0.95686, 1.0}
+           \bgroup\rmfamily
+           \fboxsep=0mm\relax
+           \begin{shaded}
+           \list{}{\parsep=-2mm\parskip=2mm\topsep=0pt\leftmargin=2mm
+           \rightmargin=2\leftmargin\leftmargin=4pt\relax}
+           \item\relax}
+           {\endlist\end{shaded}\egroup}
+breplace = \begin{shadedquote}
+           \fontsize{9pt}{9pt}
+           \begin{Verbatim}
+ereplace = \end{Verbatim}
+           \end{shadedquote}
+           \noindent
+bstretch = 0.85
+fontsize = footnotesize
+\edsni
+
+The example above merely shows what the code looks like, the details are given
+next.
+
+Each section has a heading enclosed by brackets. This heading will also be the
+name of the environment. The options for this environment should follow on the
+lines below. For instance, to define the Ptex2tex environment 'Extra'
+and the option \code{breplace}, we would write:
+\bdsni
+[Extra]
+breplace = \begin{Verbatim}
+\edsni
+
+In addition to the sections defining the environments, there is a section
+\code{[names]}. In this section we map environment keys to
+Ptex2tex environments. For instance, if we want the key 'pro' to be associated with
+the environment 'Program', we write:
+\bdat
+[names]
+pro = Program
+\edat
+Hence we can use \code{\}\code{bpro} to indicate the
+beginning of the 'Program' environment, and \code{\}\code{epro} to indicate the end.
+We can set multiple keys to point to the same environment:
+\bdat
+[names]
+pro = Program
+tmp = Program
+\edat
+If we try to assign multiple environment to the same key, only the last one is
+used:
+\bdat
+[names]
+pro = Program
+pro = System
+\edat
+
+\subsection{Defining new environments.}
+A Ptex2tex environment in the configuration file is defined by a
+section heading and several options. A minimum requirement of an environment is
+that the options \code{breplace} and \code{ereplace} are defined. Hence, for
+the environment 'Extra', the following lines should exist and be defined:
+\bdsni
+[Extra]
+breplace = \begin{Verbatim} 
+erplace = \end{Verbatim}
+\edsni
+In this case they define a simple \code{Verbatim} environment. \code{breplace}
+and \code{ereplace} control what \LaTeX~commands that should be returned at the
+beginning and at the end of the Ptex2tex environment, respectively.
+Note that only defining the environment is not enough, the keywords to be used
+with this environment also need to be defined in the 'names' section:
+\bdat
+[names]
+ext = Extra
+\edat
+Now, the keywords \code{\}\code{bext} and \code{\}\code{eext} will
+be replaced with the text defined in \code{breplace} and \code{ereplace}.
+
+We differ between two categories of environments in Ptex2tex: 
+those that make use of the \code{\}\code{newenvironment} keywords in \LaTeX,
+and those who don't, but instead use other \LaTeX~
+commands like \code{\}\code{minipage} and different packages like
+\code{fancyverb} or \code{framed} as well as different box environments. 
+
+The problem with Ptex2tex environments that use \code{\}\code{newenvironment} is
+that \LaTeX~needs this environment to be defined, but not more than
+once, or it will issue an error. Therefore, when replacing the first occurrence of each environment
+keyword (for instance 'bpro'), a definition is added as well. This is the
+keyword \code{newenv} in the section for an environment. Default, this
+is an empty string. When running Ptex2tex
+on multiple files, and then combining these files in a single document, this
+environment will be defined multiple times, once for every \code{.p.tex}
+document. Since we run Ptex2tex on one file at the time, Ptex2tex cannot know
+if a specific environment is defined earlier. 
+
+In order to get around this
+limitation, we use \code{\}\code{renewenvironment} instead of
+\code{\}\code{newenvironment}. But since it is not possible to renew an
+environment unless it already is defined, this by itself does not solve the
+problem. But if we first add the line
+\bdat
+\providecommand{\shadedquote}{}
+\edat
+we have created a way around this. What it does is to create a command
+\code{shadedquote} given that \code{shadedquote} is not already defined. There
+is no equivalent\\ (\code{\}\code{provideenvironment}) for environments, but
+since \code{\}\code{renewenvironment} simply checks if the name of the
+environment (\code{shadedquote}) is defined, not if it is defined as an
+environment, this works. 
+
+It is also possible to use an environment that is
+defined elsewhere, say in third-party \LaTeX~package. One can then use the option
+\code{define}. If it is set to \code{False}, it is assumed that the
+\LaTeX~environment is defined externally, and Ptex2tex will not define
+this environment. Currently the
+Ptex2tex environments 'Program' and 'Data' use
+\code{\}\code{renewenvironment}. The names of the \LaTeX~environments are
+\code{shadedquote} and \code{shadedquotedat}, respectively.
+These two environments are also the only ones that support code spanning multiple
+pages. This means that if the text between the beginning and ending keywords
+is too long to fit on a single page, it is divided over several pages. With the
+other Ptex2tex environments, the box enclosing the text might be
+moved to the next page, leaving a lot of white space. In the case that the
+text within the box exceeds one page, it will even disappear below the
+bottom of the page. This is a known problem for those who have experience in
+using \LaTeX. 
+
+Please note that the names of the environments should not
+contain numbers, only letters. Naming an environment
+\code{\}\code{shadedquote2} makes the interpreter think that we are using
+\code{\}\code{shadedquote} followed by the number $2$.
+
+It is possible to use so-called variable interpolation in the configuration
+file. This means that one can use the name of one option in another option in
+the section, and the value for that option will then be included in the first
+option, for example:
+\bdat
+[Program]
+breplace = \begin{Verb}[baselinestretch=%(bstretch)s]
+bstretch=0.85
+\edat
+What happens here is that the \code{%(bstretch)s} part is substituted with the value
+of the option 'bstretch'. The \code{'\%'} indicates that the variable within the
+following parenthesis is to be interpolated. The 's' after the last
+parenthesis means that the option to be inserted is a string. See the
+following code example:
+\bdsni
+breplace = \begin{Verbatim}[fontsize=\%(fontsize)s,tabsize=8,
+           baselinestretch=%(bstretch)s,
+	   defineactive=\def\#{\itshape \CommentChar},fontfamily=tt]
+ereplace = \end{Verbatim}
+#          This is a config file comment
+	   \noindent %%This is a \LaTeX comment
+bstretch = 0.85
+fontsize = footnotesize
+\edsni
+Often, the option text for 'breplace' or 'ereplace' spans several lines (of
+\LaTeX~code). It is then important that the text for the lines following the
+first use the same indentation. It is possible to comment out some of the
+lines in the configuration file by using a \code{'#'} at the beginning of the
+line. Any other position won't work, as it will be parsed as part of the
+option instead. If you need to use comments in the \LaTeX~code, you need to
+use two \code{'\%'}, as only one will be considered as variable interpolation,
+and will likely cause an error. In the previous code example
+we show some of the mentioned points.
+
+For further documentation of Python Config Files, see the Python Library
+Reference.
+
+All options within a section of the configuration file are parsed within
+Ptex2tex. You can define your own options beyond the six mentioned,
+but this will result in a warning.
+%If you try to run \code{ptex2tex -h}, you will see that for every environment
+%that is found, there are two command line arguments that are available. The
+%names of these are the keyword for the class followed by a \code{f} and a
+%\code{m}. For \code{pro}, these are thus \code{--prof} and
+%\code{--prom}. These stand for 'fontsize' and 'margin', respectively. Although
+%they are not currently used with any of the default environments that are
+%included with Ptex2tex, they are available as the class attributes
+%\code{fontsize} and \code{margin}. If they are not set at runtime, their
+%default value is \code{None}.
+
+\subsection{Remarks about \LaTeX~packages.}
+Note that some of the environments present in the environment configuration
+file require certain \LaTeX~packages to be available. Specifically, you should
+use the following lines in the header:
+\bdat
+\usepackage{graphicx,hyperref,relsize,fancyvrb,epsfig}
+\usepackage{a4,amsmath,amssymb,framed,subfigure}
+\usepackage[usenames]{color}
+\edat
+The Ptex2tex package comes with a \LaTeX~style file
+\code{ptex2tex.sty}. 
+If installed correctly, so that \LaTeX~can find it, one can simply use
+\bdat
+\usepackage{ptex2tex}
+\edat
+instead of specifying all necessary packages. Alternatively, one can simply
+copy the style file to the current working directory. This file, as well as the
+\code{.eps} files used for the Ptex2tex environments 'Warnings',
+'Rules', and 'Summation', are located in the folder \code{latex} in the source
+code for Ptex2tex. The installation script for the package will try to
+install these to the computers' \LaTeX~folders, see the README file.
+
+\subsection{Additional keywords.}
+In addition to the keywords starting with \code{@@@} and the keywords
+associated with beginning
+and ending Ptex2tex environments, there is another keyword available,
+namely \code{\}\code{code}. This keyword can be used anywhere in the text, as
+long as it is contained within a single line. This allows the use of any
+character, we can for instance write 
+\code{\}\code{code}\code{{}\code{@#_%}\verb!}! without \LaTeX~giving
+us any errors. The result is similar to the \code{\}\code{texttt}
+\LaTeX~command, but it has nicer typesetting of for instances underscores.
+It is really just a slightly modified normal verbatim, and it
+is based on the \code{\}\code{verb!}\code{...!} \LaTeX~command. The
+modification consists of removing the escape character in \LaTeX, which is
+\code{\}, in front of the characters \code{'\#'}, \code{'\%'}, \code{'\@'},
+\code{'\$'} and \code{'\_'}. Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
+in the text for the rest of the line after the character \code{\%} being marked as a comment in most
+editors, which is confusing. Writing
+\code{\}\code{code{}\code{\$}\smaller\verb!}!\larger~results in the text for the rest
+of the document being marked as a math environment. Using
+\code{\}\code{code{}\code{\}\code{\%}\smaller\verb!}!\larger~and
+\code{\}\code{code{}\code{\}\code{\$}\smaller\verb!}!\larger~instead gives us the same result
+in the final document without this problem appearing in our editor.
+
+\subsection{Mapping of keywords to environments.}
+The default mapping between Ptex2tex keywords and environments is included for
+reference:
+\bdat
+ccq  = Codeq
+cc   = Code
+ccl  = CodeLine
+pro  = Program
+sni  = Snippet
+cod  = Programsingle
+dat  = Data
+dsni = Datasnippet
+sys  = System
+slin = Systemline
+ipy  = IPython
+py   = Python
+plin = Pythonline
+ver  = Verb
+warn = Warning
+rule = Tip
+summ = Note
+mata = MatlabA
+\edat
+
+\subsection{Demo of the different environments.}
+All the environments included with Ptex2tex are a result of the needs of the
+author. One might want to change these, or add new ones. Several of the
+environments are plain copies of each other, at the time of writing this. 
+Here is a short overview of the different environments:
+\bpro
+The environment 'Program' is used for this text.
+It is meant for longer program code.
+\epro
+\bsni
+The environment 'Snippet' is used for this text.
+It is meant for shorter program code.
+\esni
+\bcod
+The environment 'Programsingle' is used for this text.
+It is meant for one-line program code.
+\ecod
+\bdat
+The environment 'Data' is used for this text.
+It is meant for the inclusion of plain data files.
+\edat
+\bdsni
+The environment 'Datasnippet' is used for this text.
+It is meant for the inclusion of short pieces of plain data files.
+\edsni
+\bsys
+The environment 'System' is used for this text.
+It is meant for writing longer commands in a terminal window.
+\esys
+\bslin
+The environment 'Systemline' is used for this text.
+It is meant for writing a single line in a terminal window.
+\eslin
+\bcc
+The environment 'Code' is used for this text.
+This is plain, simple verbatim.
+\ecc
+\bccl
+The environment 'CodeLine' is used for this text.
+This is plain, simple verbatim with numbering of lines.
+\eccl
+\code{The keyword '\}\code{code' is used for this text.}
+\bipy The environment 'IPython' is used for this text.
+It is meant for code statements in the interactive IPython shell.
+Notice that the text should start immediately after the keyword
+defining the beginning of the environment in order for the text 
+to start after the IPython prompt.
+\eipy
+\bpy 
+The environment 'Python' is used for this text.
+It is meant for longer code statements in the regular Python shell.
+\epy
+\bplin
+The environment 'Pythonline' is used for this text.
+It is meant for single line code statements in the regular Python shell.
+\eplin
+\bver
+The environment 'Verb' is used for this text.
+It is a simple verbatim environment.
+\ever
+\bwarn
+The environment 'Warning' is used for this text.
+warning.eps needs to be accessible by \LaTeX.
+\ewarn
+\brule
+The environment 'Tip' is used for this text.
+tip.eps needs to be accessible by \LaTeX.
+\erule
+\bsumm
+The environment 'Note' is used for this text.
+note.eps needs to be accessible by \LaTeX.
+\esumm
+\bmata
+The environment 'MatlabA' is used for this text.
+It is another example of how to display code. For now, there is no way of
+setting the heading ('Code') for each time the environment is used. This is on
+the TODO list.
+\emata
+
+\section{Support}
+Please contact \code{ilmarw@simula.no} for bug reports, feature requests and
+general help.
+\end{document}
