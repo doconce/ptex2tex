@@ -1,0 +1,16 @@
+- In case preprocess is unavailable, print message and continue, do not exit.
+
+- CODE gives an error, not throw an exception, when 'to' or 'from' 
+  are not found.
+
+- Added a space character after \noindent so that one can write a string
+  immidiately after: '\noindentThis is important'
+
+- Added a way to define wether an environment should be defined every time
+  it is used, it should be defined once per file or if it defined somewhere
+  else (main .tex file)
+
+- Add support for defining LaTeX environments for multiple, instead  of
+  assuming they are defined in an external file (when using define=False in
+  the config file). Note that the names of environments can only contain
+  letters, hence shaded2 is not valid unless shaded is undefined.

@@ -1,0 +1,37 @@
+- Change the name of the classes for the environment from their
+  original names to names describing their looks, the way it is now is
+  confusing. This goes also for the temporary names within the LaTeX code.
+
+- Implement the possibility of having @@@CODE and the like inside environments 
+  without the file actually being included. ctex2tex has a variable insidebc 
+  that is set and checked.
+
+- Add arguments to the beginning statements of ptex2tex environments, 
+  such that the header for Warnings, Rules, Summation and MatlabA can be 
+  set.
+
+- Add possibility for defining what environments are used with @@@CODE, @@@DATA
+  and @@@CMD in configuration file.
+
+- Add possibility for setting the default vale for the integer following the
+  character '#' in @@@CMD in the configuration file.
+
+- Add support for preprocessor's commandline arguments.
+
+- CODE does not except regex, one has to write 'def func(' instead of 
+  'def func\(': less backwards compability (ctex2tex). Add option --regex
+  so that ptex2tex using regex instead of line.search
+
+- Add functionality in @@@CMD to strip lines with reverse sign \r
+    >>> d.split('\r')
+    ['time=4', 'time=5']
+    >>> d.split('\r')[-1]
+    'time=5'
+
+- Add functionality to strip code text in @@@CODE (try/except and 
+  __debug__-blocks.
+  
+- Windows: Add ptex2tex.bat
+  Can be automated, see setup.py file for Instant.
+
+- doc: Add documentation for \code and \emp.

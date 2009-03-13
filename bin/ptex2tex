@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+"""Executable script associated with ptex2tex module."""
+import ptex2tex
+import sys, os
+if len(sys.argv) < 2:
+    os.system(sys.argv[0] + " -h")
+    sys.exit(1)
+sys.exit(ptex2tex.init(sys.argv))

@@ -1,0 +1,91 @@
+Installing ptex2tex
+===================
+
+Installing latexslides is done by
+
+python setup.py install
+
+with the usual Distutils options available.
+
+The next sections are for those who know Distutils and LaTeX, and explains 
+how to make LaTeX know about the style files that come the ptex2tex. 
+If this gets too complicated, there are two options that should be quite 
+simple:
+1) copy the contents of the folder latex to the folder you are running
+ptex2tex from
+2) add the folder latex to the environment variable TEXINPUTS, here
+demonstrated for the Bash shell: 
+
+export TEXINPUTS=:.:/path/to/style_files:$TEXINPUTS
+
+Note the first semi-colon; it ensures that the systemwide directories are
+searched first.
+
+Location of LaTeX files
+=======================
+
+As part of ptex2tex, a style file (ptex2tex.sty) and several Encapsulated
+Postscript file (*.eps) are provided
+in the folder 'latex'. When running the above installation command,
+the style files are written to
+os.path.join(sys.prefix, 'share', 'texmf', 'tex', 'latex', 'ptex2tex').
+How latex will find the files when running is explained in the next section.
+
+Here, os.path.join(sys.prefix, 'foo', 'bar') is Python code and results in 
+the directory /usr/foo/bar on Linux, assuming Python is installed in /usr
+
+The location of the files can be changed in the following ways:
+
+python setup.py install --install-data=/foo
+
+The style files are now written to
+os.path.join('/foo', 'share', 'texmf', 'tex', 'latex', 'ptex2tex')
+
+python setup.py install --home=/bar
+
+and
+
+python setup.py install --prefix=/bar
+
+work as usual, the style files are then written to
+os.path.join('/bar', 'share', 'texmf', 'tex', 'latex', 'ptex2tex')
+as well. Notice that when using --home and --prefix, not only the LaTeX 
+files, but also all other package files are affected, see the Distutils 
+manual.
+
+Note that the option --install-data only works for the latex files, and
+overwrite the options --home and --prefix for these files if it is given in
+addition to those (as it should).
+
+If none of these options behaves as required (for instance, you would like 
+to install them to $HOME/texmf), then the variable 'latex_dir' in setup.py 
+should be set to this directory.
+
+Making sure LaTeX finds the files at runtime
+============================================
+
+After the script finishes, you should make sure that the latex command can
+find the files. If the files are located in one of the directories where 
+LaTeX knows about them, it should suffice to run the following command:
+
+texconfig rehash
+
+To check which directories are available to LaTeX, you can use one of the
+following two commands:
+
+texconfig conf
+
+or
+
+kpsepath tex
+
+As a last resort, it is possible to set the environment variable TEXINPUTS,
+see the first section of this file.
+
+Authors
+=======
+ptex2tex is based on a package called ctex2tex, 
+developed by Hans Petter Langtangen. 
+Ilmar Wilbers redesigned and reimplemented that package. New features were
+also added. Both authors work at Simula Research Laboratory in Norway,
+www.simula.no.
