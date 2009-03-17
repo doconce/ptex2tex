@@ -111,8 +111,10 @@ class _Ptex2tex:
         self.texfile = self.file+".tex"
         
         parser.add_option('-v', action="store_true", dest="verbose", help='enable debug output')
+        parser.add_option('-c', '--inline-code-font', dest="inline_code_font", help='font to be used for emp/code inline "verbatim" text: smaller, 9, 10, 11', default='9')
         self.options, self.args = parser.parse_args(argv[1:])
         self.verbose = self.options.verbose
+        self.inline_code_font = self.options.inline_code_font
         
         # Returns a dict where the keys are the names of the classes,
         # and the values are a tuple consisting of an instance of the class,
@@ -188,7 +190,7 @@ class _Ptex2tex:
         return '\n'.join(lines[startline:stopline]).strip('\n')
         
     def preprocessor(self):
-        """Runs the preprocessor command on the file (if available)."""
+        """Run the preprocessor command on the file (if available)."""
         if not os.path.isfile(self.ptexfile):
             print "file not found"
             sys.exit(2)
@@ -203,12 +205,19 @@ class _Ptex2tex:
         preprocess.preprocess(self.ptexfile, self.preoutfile, force=1)
         print "done"
 
-    def statements(self):
-        """Replaced the \code environment with verbatim. Do the same for \emp."""
+    def inline_tt(self):
+        """Replace the \emp and \code environments with raw latex code."""
         lines = open(self.preoutfile).read()
-        #lines = lines.replace(r'\emp{', r'\code{') # Must use \texttt
-        pattern = re.compile(r'\\emp\{(.*?)\}')#, re.DOTALL)
-        lines = re.sub(pattern, r'\smaller\\texttt{\1}\larger{}', lines)
+
+        # \emp{} commands: replace with \texttt{} and font adjustment
+        pattern = re.compile(r'\\emp\{(.*?)\}') #, re.DOTALL)
+        if self.inline_code_font == 'smaller':
+            lines = re.sub(pattern, r'{\smaller\\texttt{\1}\larger{}}', lines)
+        else:
+            fontsize = int(self.inline_code_font)
+            lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\texttt{\1}}' % (fontsize, fontsize), lines)
+
+        # \code{} commands: replace with \verb!..! and font adjustment
         pattern = re.compile(r'\\code\{(.*?)\\_\\_(.*?)\\_\\_(.*?)\}')#, re.DOTALL)
         lines = re.sub(pattern, r'\code{\1__\2__\3}', lines)
         no_of_backslashes = 5
@@ -216,8 +225,13 @@ class _Ptex2tex:
             # Handle up to no_of_backslashes in backslash constructions           
             pattern = re.compile(r'\\code\{(.*?)\\([_#%$@])(.*?)\}')#, re.DOTALL)
             lines = re.sub(pattern, r'\code{\1\2\3}', lines)
-        pattern = re.compile(r'\\code\{(.*?)\}')#, re.DOTALL)
-        lines = re.sub(pattern, r'{\smaller\\verb!\1!\larger{}}', lines)
+        pattern = re.compile(r'\\code\{(.*?)\}')  #, re.DOTALL)
+        if self.inline_code_font == 'smaller':
+            lines = re.sub(pattern, r'{\smaller\\verb!\1!\larger{}}', lines)
+        else:
+            fontsize = int(self.inline_code_font)
+            lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\verb!\1!}' % (fontsize, fontsize), lines)
+        
         open(self.preoutfile, 'w').write(lines)
 
     def include_file(self):
@@ -414,7 +428,7 @@ class _Ptex2tex:
     def run(self):
         """Runs through the different functions necessary to complete the conversion."""
         self.preprocessor()
-        self.statements()
+        self.inline_tt()
         self.include_file()
         self.include_command()
         self.convert()
