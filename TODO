@@ -1,4 +1,6 @@
-- Add changes made for 0.31 to documentation.
+- Add changes made for 0.31 to documentation:
+  - '~' for space in CODE/DATA
+  - New section 'inline_code' in ConfigFile.
 
 - Change the name of the classes for the environment from their
   original names to names describing their looks, the way it is now is

@@ -4,6 +4,9 @@ Version 0.31
 - Added support for specifying spaces rounde start and stop keywords
   for @@@CODE and @@@DATA. Use '~' character.
 
+- Added support for specifying font size for inline code (\code{}), set in
+  config file. Can be 'smaller' or integer.
+
 Version 0.3
 ============
 
