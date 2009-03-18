@@ -120,7 +120,6 @@ class _Ptex2tex:
         # as well as the begin and end codes:
         self.supported = envs.envs(os.path.dirname(self.ptexfile))
         self.inline_code = self.supported.pop('inline_code')
-        print self.inline_code
         if not self.inline_code.has_key('font'):
             print "missing option 'font' in inline code"
             sys.exit(5)
