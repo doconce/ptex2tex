@@ -111,15 +111,19 @@ class _Ptex2tex:
         self.texfile = self.file+".tex"
         
         parser.add_option('-v', action="store_true", dest="verbose", help='enable debug output')
-        parser.add_option('-c', '--inline-code-font', dest="inline_code_font", help='font to be used for emp/code inline "verbatim" text: smaller, 9, 10, 11', default='9')
+        
         self.options, self.args = parser.parse_args(argv[1:])
         self.verbose = self.options.verbose
-        self.inline_code_font = self.options.inline_code_font
-        
+                
         # Returns a dict where the keys are the names of the classes,
         # and the values are a tuple consisting of an instance of the class,
         # as well as the begin and end codes:
         self.supported = env.envs(os.path.dirname(self.ptexfile))
+        self.inline_code = self.supported.pop('inline_code')
+        print self.inline_code
+        if not self.inline_code.has_key('font'):
+            print "missing option 'font' in inline code"
+            sys.exit(5)
 
 #        # Define some global choices:
 #        v = False
@@ -211,10 +215,10 @@ class _Ptex2tex:
 
         # \emp{} commands: replace with \texttt{} and font adjustment
         pattern = re.compile(r'\\emp\{(.*?)\}') #, re.DOTALL)
-        if self.inline_code_font == 'smaller':
+        if self.inline_code['font'] == 'smaller':
             lines = re.sub(pattern, r'{\smaller\\texttt{\1}\larger{}}', lines)
         else:
-            fontsize = int(self.inline_code_font)
+            fontsize = int(self.inline_code['font'])
             lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\texttt{\1}}' % (fontsize, fontsize), lines)
 
         # \code{} commands: replace with \verb!..! and font adjustment
@@ -226,10 +230,10 @@ class _Ptex2tex:
             pattern = re.compile(r'\\code\{(.*?)\\([_#%$@])(.*?)\}')#, re.DOTALL)
             lines = re.sub(pattern, r'\code{\1\2\3}', lines)
         pattern = re.compile(r'\\code\{(.*?)\}')  #, re.DOTALL)
-        if self.inline_code_font == 'smaller':
+        if self.inline_code['font'] == 'smaller':
             lines = re.sub(pattern, r'{\smaller\\verb!\1!\larger{}}', lines)
         else:
-            fontsize = int(self.inline_code_font)
+            fontsize = int(self.inline_code['font'])
             lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\verb!\1!}' % (fontsize, fontsize), lines)
         
         open(self.preoutfile, 'w').write(lines)

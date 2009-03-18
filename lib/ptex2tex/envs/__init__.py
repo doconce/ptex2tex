@@ -91,10 +91,20 @@ def envs(dirname):
     config.read(cfgfiles)
     supported = {}
     sections = config.sections()
+    # Collect options for cod environment:
+    if not 'inline_code' in sections:
+        print "section 'inline_code' not found in config file"
+        sys.exit(8)
+    supported['inline_code'] = {}
+    for option in config.options('inline_code'):
+        supported['inline_code'][option] = config.get('inline_code', option)
+
+    # Find all entries in names section:
     if not 'names' in sections:
         print "section 'names' not found in config file"
         sys.exit(6)
     name = sections.pop(sections.index('names'))
+    # Collect options for entries found in names section:
     for option in config.options(name):
         key = option
         value = config.get(name, key)
@@ -113,6 +123,7 @@ def envs(dirname):
                 curdict.update({option: config.get(value, option)})
             
     for key, value in supported.items():
+        if key == 'inline_code': continue
         code = value.name
         try:
             supported[key] = (value, '\\' + 'b' + code, '\\' + 'e' + code)
