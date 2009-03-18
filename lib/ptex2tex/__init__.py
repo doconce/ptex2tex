@@ -5,7 +5,7 @@ __all__ = ['__doc__']
 
 import sys, os, re, shutil, string, glob, commands
 from optparse import OptionParser
-import ptex2tex.envs as env
+import ptex2tex.envs as envs
 
 code_statement = "@@@CODE"
 data_statement = "@@@DATA"
@@ -118,7 +118,7 @@ class _Ptex2tex:
         # Returns a dict where the keys are the names of the classes,
         # and the values are a tuple consisting of an instance of the class,
         # as well as the begin and end codes:
-        self.supported = env.envs(os.path.dirname(self.ptexfile))
+        self.supported = envs.envs(os.path.dirname(self.ptexfile))
         self.inline_code = self.supported.pop('inline_code')
         print self.inline_code
         if not self.inline_code.has_key('font'):
