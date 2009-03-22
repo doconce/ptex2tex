@@ -119,8 +119,28 @@ class _Ptex2tex:
         # and the values are a tuple consisting of an instance of the class,
         # as well as the begin and end codes:
         self.supported = envs.envs(os.path.dirname(self.ptexfile))
+
+        # [preprocess] section contains defines (a list of macro names)
+        # and includes, a list of paths. The defines are translated to
+        # a dict with names as keys and True values:
+        #print 'self.supported:\n'
+        #import pprint; pprint.pprint(self.supported)
+        self.preprocess = self.supported.pop('preprocess')
+        self.preprocess_defines = {}
+        if 'defines' in self.preprocess:
+            s = self.preprocess['defines']
+            for define in s.split(','):
+                if define:  # non-empty string
+                    self.preprocess_defines[define] = True
+        if 'includes' in self.preprocess:
+            s = self.preprocess['includes']
+            self.preprocess_includes = eval(s)
+        else:
+            self.preprocess_includes = []
+            
+        # [inline_code] section has the font item for \code and \emp commands:
         self.inline_code = self.supported.pop('inline_code')
-        if not self.inline_code.has_key('font'):
+        if not 'font' in self.inline_code:
             print "missing option 'font' in inline code"
             sys.exit(5)
 
@@ -200,12 +220,15 @@ class _Ptex2tex:
         try:
             import preprocess
         except:
-            print 'preprocessor not found, skipping...'
+            print 'Could not find the preprocess program, skipping preprocessing...'
             open(self.preoutfile, 'w').write(open(self.ptexfile).read())
             return
         print "running preprocessor... ",
         # Should include commandline arguments for preprocessor?
-        preprocess.preprocess(self.ptexfile, self.preoutfile, force=1)
+        preprocess.preprocess(self.ptexfile, self.preoutfile,
+                              defines=self.preprocess_defines,
+                              includePath=self.preprocess_includes,
+                              force=1)
         print "done"
 
     def inline_tt(self):

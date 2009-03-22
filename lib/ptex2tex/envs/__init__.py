@@ -99,6 +99,10 @@ def envs(dirname):
     for option in config.options('inline_code'):
         supported['inline_code'][option] = config.get('inline_code', option)
 
+    supported['preprocess'] = {}
+    for option in config.options('preprocess'):
+        supported['preprocess'][option] = config.get('preprocess', option)
+
     # Find all entries in names section:
     if not 'names' in sections:
         print "section 'names' not found in config file"
@@ -123,7 +127,9 @@ def envs(dirname):
                 curdict.update({option: config.get(value, option)})
             
     for key, value in supported.items():
-        if key == 'inline_code': continue
+        if key == 'inline_code' or key == 'preprocess':
+            continue
+
         code = value.name
         try:
             supported[key] = (value, '\\' + 'b' + code, '\\' + 'e' + code)
