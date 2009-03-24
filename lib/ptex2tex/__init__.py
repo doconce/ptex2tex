@@ -220,7 +220,7 @@ class _Ptex2tex:
         try:
             import preprocess
         except:
-            print 'Could not find the preprocess program, skipping preprocessing...'
+            print 'could not find the preprocess program, skipping preprocessing...'
             open(self.preoutfile, 'w').write(open(self.ptexfile).read())
             return
         print "running preprocessor... ",
