@@ -202,7 +202,7 @@ which Ptex2tex is based on, regular expressions were used.
 % #endif
 
 The environment keys 'pro'
-and 'sni' are short for 'Program' and 'Snippet', respectively, indicating that
+and 'sni' are short for 'program' and 'snippet', respectively, indicating that
 the former is meant to be used for typesetting a complete program, whereas the
 latter is meant for a program snippet, for instance a function. Both these
 Ptex2tex environments are for typesetting code. Environment keys
@@ -432,7 +432,7 @@ bstretch
 \edat
 Here is an example where all these options are used:
 \bdsni
-[Program]
+[Bluebox]
 define   = True
 newenv   = \providecommand{\shadedquote}{}
            \renewenvironment{shadedquote}[1][]{
@@ -469,25 +469,25 @@ breplace = \begin{Verbatim}
 In addition to the sections defining the environments, there is a section
 \code{[names]}. In this section we map environment keys to
 Ptex2tex environments. For instance, if we want the key 'pro' to be associated with
-the environment 'Program', we write:
+the environment 'Bluebox', we write:
 \bdat
 [names]
-pro = Program
+pro = Bluebox
 \edat
 Hence we can use \code{\}\code{bpro} to indicate the
-beginning of the 'Program' environment, and \code{\}\code{epro} to indicate the end.
+beginning of the 'pro' environment, and \code{\}\code{epro} to indicate the end.
 We can set multiple keys to point to the same environment:
 \bdat
 [names]
-pro = Program
-tmp = Program
+pro = Bluebox
+tmp = Bluebox
 \edat
 If we try to assign multiple environment to the same key, only the last one is
 used:
 \bdat
 [names]
-pro = Program
-pro = System
+pro = Bluebox
+pro = Graybox
 \edat
 
 \subsection{Defining new environments.}
@@ -548,18 +548,26 @@ It is also possible to use an environment that is
 defined elsewhere, say in third-party \LaTeX~package. One can then use the option
 \code{define}. If it is set to \code{False}, it is assumed that the
 \LaTeX~environment is defined externally, and Ptex2tex will not define
-this environment. Currently the
-Ptex2tex environments 'Program' and 'Data' use
-\code{\}\code{renewenvironment}. The names of the \LaTeX~environments are
-\code{shadedquote} and \code{shadedquotedat}, respectively.
-These two environments are also the only ones that support code spanning multiple
-pages. This means that if the text between the beginning and ending keywords
-is too long to fit on a single page, it is divided over several pages. With the
-other Ptex2tex environments, the box enclosing the text might be
-moved to the next page, leaving a lot of white space. In the case that the
-text within the box exceeds one page, it will even disappear below the
-bottom of the page. This is a known problem for those who have experience in
-using \LaTeX. 
+this environment. 
+
+There are two types of boxes supported by the standard configuration
+file \emp{ptex2tex.cfg}. One kind (e.g., 'Blue') allows the text 
+in the box to be split over pages, while the other kind (e.g., 'Blue\_sp')
+does not allow splitting, which often forces \LaTeX\ to move the box
+to the next space, leaving a lot of white space on the preceding page.
+% outdated:
+%Currently the
+%Ptex2tex environments 'Program' and 'Data' use
+%\code{\}\code{renewenvironment}. The names of the \LaTeX~environments are
+%\code{shadedquote} and \code{shadedquotedat}, respectively.
+%These two environments are also the only ones that support code spanning multiple
+%pages. This means that if the text between the beginning and ending keywords
+%is too long to fit on a single page, it is divided over several pages. With the
+%other Ptex2tex environments, the box enclosing the text might be
+%moved to the next page, leaving a lot of white space. In the case that the
+%text within the box exceeds one page, it will even disappear below the
+%bottom of the page. This is a known problem for those who have experience in
+%using \LaTeX. 
 
 Please note that the names of the environments should not
 contain numbers, only letters. Naming an environment
@@ -571,7 +579,7 @@ file. This means that one can use the name of one option in another option in
 the section, and the value for that option will then be included in the first
 option, for example:
 \bdat
-[Program]
+[SomeBox]
 breplace = \begin{Verb}[baselinestretch=%(bstretch)s]
 bstretch=0.85
 \edat
@@ -665,24 +673,42 @@ in the final document without this problem appearing in our editor.
 The default mapping between Ptex2tex keywords and environments is included for
 reference:
 \bdat
-ccq  = Codeq
+# computer code in quote environment (gives a left margin):
+ccq  = CodeIndented
+# computer code with no left margin:
 cc   = Code
-ccl  = CodeLine
-pro  = Program
-sni  = Snippet
-cod  = Programsingle
-dat  = Data
-dsni = Datasnippet
-sys  = System
-slin = Systemline
-ipy  = IPython
-py   = Python
-plin = Pythonline
+# computer code with line numbering:
+ccl  = CodeLineNo
+# program box:
+pro  = Blue2
+# computer code box (snippet, not complete program):
+cod  = Blue_snippet
+# computer code box (snippet, not complete program):
+sni  = Blue_snippet
+# data file:
+dat  = CodeIndented
+# data file snippet:
+dsni = CodeIndented
+# system commands (in terminal window):
+sys  = CodeTerminal
+# one-line system command (in terminal window):
+slin = Code
+# IPython interactive session:
+ipy  = Code
+# standard interactive python session:
+py   = Code
+# execution of a Python program ("run python"):
+rpy  = CodeTerminal
+# one-line program code:
+plin = Code
+# verbatim environment:
 ver  = Verb
-warn = Warning
+# warning box:
+warn = Warnings
+# tip box:
 rule = Tip
+# note box:
 summ = Note
-mata = MatlabA
 \edat
 
 \subsection{Demo of the different environments.}
@@ -691,78 +717,72 @@ author. One might want to change these, or add new ones. Several of the
 environments are plain copies of each other, at the time of writing this. 
 Here is a short overview of the different environments:
 \bpro
-The environment 'Program' is used for this text.
+'pro' is used for this text.
 It is meant for longer program code.
 \epro
 \bsni
-The environment 'Snippet' is used for this text.
+'sni' is used for this text.
 It is meant for shorter program code.
 \esni
 \bcod
-The environment 'Programsingle' is used for this text.
+'cod' is used for this text.
 It is meant for one-line program code.
 \ecod
 \bdat
-The environment 'Data' is used for this text.
+'dat' is used for this text.
 It is meant for the inclusion of plain data files.
 \edat
 \bdsni
-The environment 'Datasnippet' is used for this text.
+'dsni' is used for this text.
 It is meant for the inclusion of short pieces of plain data files.
 \edsni
 \bsys
-The environment 'System' is used for this text.
+'sys' is used for this text.
 It is meant for writing longer commands in a terminal window.
 \esys
 \bslin
-The environment 'Systemline' is used for this text.
+'sys' is used for this text.
 It is meant for writing a single line in a terminal window.
 \eslin
 \bcc
-The environment 'Code' is used for this text.
-This is plain, simple verbatim.
+'cc' is used for this text.
+This is for computer code without any colored background.
 \ecc
 \bccl
-The environment 'CodeLine' is used for this text.
-This is plain, simple verbatim with numbering of lines.
+'ccl' is used for this text.
+This is for computer code without any colored background,
+and with numbering of the lines.
 \eccl
-\code{The keyword '\}\code{code' is used for this text.}
-\bipy The environment 'IPython' is used for this text.
+\bipy 'ipy' is used for this text.
 It is meant for code statements in the interactive IPython shell.
 Notice that the text should start immediately after the keyword
 defining the beginning of the environment in order for the text 
 to start after the IPython prompt.
 \eipy
 \bpy 
-The environment 'Python' is used for this text.
+'py' is used for this text.
 It is meant for longer code statements in the regular Python shell.
 \epy
 \bplin
-The environment 'Pythonline' is used for this text.
+'plin' is used for this text.
 It is meant for single line code statements in the regular Python shell.
 \eplin
 \bver
-The environment 'Verb' is used for this text.
+'ver' is used for this text.
 It is a simple verbatim environment.
 \ever
 \bwarn
-The environment 'Warning' is used for this text.
+'warn' is used for this text.
 warning.eps needs to be accessible by \LaTeX.
 \ewarn
 \brule
-The environment 'Tip' is used for this text.
+'rule' is used for this text.
 tip.eps needs to be accessible by \LaTeX.
 \erule
 \bsumm
-The environment 'Note' is used for this text.
+'summ' is used for this text.
 note.eps needs to be accessible by \LaTeX.
 \esumm
-\bmata
-The environment 'MatlabA' is used for this text.
-It is another example of how to display code. For now, there is no way of
-setting the heading ('Code') for each time the environment is used. This is on
-the TODO list.
-\emata
 
 \section{Support}
 Please contact \code{ilmarw@simula.no} for bug reports, feature requests and
