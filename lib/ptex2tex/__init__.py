@@ -120,9 +120,10 @@ class _Ptex2tex:
         # as well as the begin and end codes:
         self.supported = envs.envs(os.path.dirname(self.ptexfile))
 
-        # [preprocess] section contains defines (a list of macro names)
-        # and includes, a list of paths. The defines are translated to
-        # a dict with names as keys and True values:
+        # [preprocess] section contains defines/undefines
+        # (a list of macro names)
+        # and includes, a list of paths. The defines/undefines
+        # are translated to a dict with names as keys and True/False values:
         #print 'self.supported:\n'
         #import pprint; pprint.pprint(self.supported)
         self.preprocess = self.supported.pop('preprocess')
@@ -132,6 +133,16 @@ class _Ptex2tex:
             for define in s.split(','):
                 if define:  # non-empty string
                     self.preprocess_defines[define] = True
+        if 'undefines' in self.preprocess:
+            s = self.preprocess['undefines']
+            for define in s.split(','):
+                if define:  # non-empty string
+                    # this is not right:
+                    #self.preprocess_defines[define] = False
+                    # this is the right way to do it (values in
+                    # the defines dict are always treated as True :-(
+                    if define in self.preprocess_defines:
+                        del self.preprocess_defines[define]
         if 'includes' in self.preprocess:
             s = self.preprocess['includes']
             self.preprocess_includes = eval(s)
@@ -224,7 +235,6 @@ class _Ptex2tex:
             open(self.preoutfile, 'w').write(open(self.ptexfile).read())
             return
         print "running preprocessor... ",
-        # Should include commandline arguments for preprocessor?
         preprocess.preprocess(self.ptexfile, self.preoutfile,
                               defines=self.preprocess_defines,
                               includePath=self.preprocess_includes,
