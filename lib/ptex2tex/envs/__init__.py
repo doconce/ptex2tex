@@ -188,7 +188,7 @@ def envs(dirname):
                         envir_type = supported[key][0].envir_type
                         #print 'Found %s in [%s]' % (name, envir_type)
                         other_envir_type = newenvir_types[newenvir_names.index(name)]
-                        #print 'Found %s in [%s] too' % (name, other_envir_type)
+                        #xoprint 'Found %s in [%s] too' % (name, other_envir_type)
                         if other_envir_type != envir_type:
                             print """
     Error: new latex environment "%s" defined in [%s] in
