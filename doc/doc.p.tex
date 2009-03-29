@@ -12,29 +12,53 @@ Ptex2tex is a tool that allows you to replace \LaTeX~environment declarations
 with simple keywords. Say that you are writing a book or an article, and there
 is a certain style of box that you use frequently. The annoying thing is that
 this box has a lot of \LaTeX~syntax connected with it in order for it to look like
-the way you want it to. Let's look at an example involving a black box:
-\bpy
+the way you want it to. Let's look at an example involving a blue box:
+\bsni
 import sys; print 'script name is', sys.argv[0]
-\epy
+\esni
 The \LaTeX~source code for this box looks as follows:
-\bdat
-\bpy
+\begin{verbatim}
+\providecommand{\shadedquoteBluesnippet}{}
+\renewenvironment{shadedquoteBluesnippet}[1][]{
+\definecolor{shadecolor}{rgb}{0.87843, 0.95686, 1.0}
+\definecolor{shadetitle}{rgb}{0.5, 0.95686, 1}
+\bgroup\rmfamily
+\fboxsep=0mm\relax
+\begin{shaded}
+{{\hfill\tiny\textsf{\textcolor{shadetitle}{Snippet\ \ }}}}
+\list{}{\parsep=-2mm\parskip=0mm\topsep=0pt\leftmargin=2mm
+\rightmargin=2\leftmargin\leftmargin=4pt\relax}
+\item\relax}
+{\endlist{\textcolor{shadecolor}{\ }}\end{shaded}\egroup}
+\begin{shadedquoteBluesnippet}
+\fontsize{9pt}{9pt}
+\begin{Verbatim}
 import sys; print 'script name is', sys.argv[0]
-\epy
-\edat
-With Ptex2tex the box expands as a certain environment, e.g. \code{mybox}:
+\end{Verbatim}
+\end{shadedquoteBluesnippet}
+\noindent
+\end{verbatim}
+\noindent
+With Ptex2tex, the box is crated by just enclosing the text (inside the box)
+in a certain \emph{environment}, say \code{mybox}:
 \bdat
 \bmybox
 import sys; print 'script name is', sys.argv[0]
 \emybox
 \edat
-Now, we can define what type of box we want in a configuration file. The
+The \LaTeX{} code corresponding to the \code{mybox} environment, i.e.,
+how the box should look like, can now be defined in a configuration file. 
+It is then easy to work with boxes, typically contining computer code,
+in a large document and with Ptex2tex just use some environment names
+rather than the full, complicated \LaTeX{} surroundings.
+That is,
+the
 Ptex2tex approach allows much less code, and makes it easier to concentrate on the contents
 of the document we are writing and not the \LaTeX~code necessary to create such
-a box. Suppose you want the box to have a complete different look:
-\bmata
+a box. Suppose you want the box to have a completely different look:
+\bcoderule
 import sys; print 'script name is', sys.argv[0]
-\emata
+\ecoderule
 which in pure \LaTeX~looks like:
 \begin{SaveVerbatim}{tmp2}
 \vspace{4pt}
@@ -44,10 +68,10 @@ framerule=1pt]
 import sys; print 'script name is', sys.argv[0]
 \end{Verbatim}
 \end{SaveVerbatim}
-\begin{shadedquotedat}
+\begin{shadedquoteGray}
 \fontsize{9pt}{9pt}
 \UseVerbatim{tmp2}
-\end{shadedquotedat}
+\end{shadedquoteGray}
 \noindent
 Using plain \LaTeX, you would have to replace the \LaTeX~code, which in this
 case is located both before and after the code you want to display. In
@@ -57,7 +81,7 @@ use search and replace in your editor. Using Ptex2tex you could
 simply swap \code{mybox} with \code{yourbox}, or change the configuration file
 accordingly if the change is to be made for all boxes using this style.
 In this way, you do not need to
-make any changes to your document itself at all!
+make any changes to the document itself at all!
 
 Another major advantage of Ptex2tex is that it provides means to include text from files as well as
 output from programs ran at the commandline at compile time. Say
@@ -82,9 +106,11 @@ The output from running this function with a=2 and b=0 is:
 @@@CMD python division.py #0
 \line(1,0){374}\\
  \\
-This makes Ptex2tex a very convenient tool when writing large \LaTeX~documents about software.
+This makes Ptex2tex a very convenient tool, particularly 
+when writing large \LaTeX~documents about computer programming where
+one needs to include a lot of programs and code snippets.
 
-\subsection{Motivation.}
+\subsection{Motivation}
 Why do we not simply define \LaTeX~environments and use these directly in our
 files? We consider Python more powerful and convenient than \LaTeX~for
 generating environments. Also, including text from file using search
@@ -103,7 +129,7 @@ be done in \LaTeX~using classes, for instance, writing them in Python is much
 easier. As Ptex2tex uses Python configuration files to define commands, one does not even have to
 know Python in order to extend and tailor Ptex2tex.
 
-\subsection{Structure of this tutorial.}
+\subsection{Structure of this tutorial}
 This tutorial is divided in four sections. Following the introduction is a
 section about preprocessor statements, followed by a section on including files
 and output from program execution. Finally, we will explain how the
@@ -174,7 +200,7 @@ including files and for including the output from executed programs. For both
 these two stages, the input file type will be \code{.tmp1} and the output file
 type is \code{.tmp2}.
 
-\subsection{\texttt{@@@CODE}.}
+\subsection{\texttt{@@@CODE}}
 A line \emph{starting} with this statement indicates that a file containing a program
 (that is, computer code) is to be included in the document. If there is only
 one argument after the statement (the file name), the whole file is included. If a second
@@ -236,7 +262,7 @@ includes everything from the first instance of the string 'if isinstance'
 \emph{up to} , but not including, the first instance of 'elif' \emph{after} 'if isinstance'.
 @@@CODE myprog.py if isinstance@elif
 
-\subsection{\texttt{@@@DATA}.}
+\subsection{\texttt{@@@DATA}}
 \code{@@@DATA} is essentially the same as \code{@@@CODE}, but different environment keys are used:
 'pro' becomes 'dat' and 'sni' becomes 'dsni'. These are short for 'Data' and
 'Data snippet', respectively. Whereas \code{@@@CODE}
@@ -244,7 +270,7 @@ is meant to be used with program code, \code{@@@DATA} is meant to be used with
 data files that are not code, for instance input files to, and output files
 from, computer programs.
 
-\subsection{\texttt{@@@CMD}.}
+\subsection{\texttt{@@@CMD}}
 A line \emph{starting} with the statement \code{@@@CMD} indicates that we want to include
 the output from a shell command with commandline arguments. All text after
 the statement \code{@@@CMD} will be executed, except the text after (and including)
@@ -274,7 +300,7 @@ than where we are running Ptex2tex, without the output reflecting this.
 For options \code{'3'} and \code{'4'} the first word is simply stripped,
 allowing statements like \code{'python code/myprog.py'} to be printed as \code{'myprog.py'}
 and \code{'code/myprog.py'}, respectively. The default option is \code{'3'},
-and the terminal session is typeset using the environment key 'sys' ('System').
+and the terminal session is typeset using the environment key 'sys' (for ``system'').
 
 Again, let us exemplify this. Running \code{'python myprog.py -1 2 -5'} in a
 shell gives us the following output:
@@ -336,7 +362,7 @@ typeset. Ptex2tex replaces these keywords with the \LaTeX~commands
 that we have configured the Ptex2tex environment in question to be
 associated with. We will now explain this in more detail.
 
-\subsection{How to use the environments.}
+\subsection{How to use the environments}
 Ptex2tex environments are described by several keywords. In the
 previous section we looked at the ones starting with \code{'@@@'}, and
 explained that these keywords were replaced with different Ptex2tex
@@ -375,19 +401,19 @@ instance from 'pro' to 'sys', instead of changing up to several lines of
 This step results in a \code{.tex} file that can be compiled with \LaTeX. In
 the next section we show more of the details behind the environment keys.
 
-\subsection{Configuration file.}\label{sec:conffile}
+\subsection{The configuration file}\label{sec:conffile}
 As mentioned earlier, the idea of Ptex2tex is to allow the user to write short keywords for
 parts of the document that are to be typeset in a special way. When running
 Ptex2tex, these keywords are then replaced with the full
-\LaTeX~commands, resulting in plain \code{.tex} files. For instance will the
+\LaTeX~commands, resulting in plain \code{.tex} files. For instance may the
 keyword \code{\}\code{bpy} be replaced with
 \bdat
-\bpy
+\plin
 \edat
 and
 \code{\}\code{epy} with
 \bdat
-\epy
+\elin
 \edat
 Some keywords will also output additional \LaTeX~code for defining
 \LaTeX~environments once for every file, more on this later. We will differentiate
@@ -431,7 +457,7 @@ fontsize
 bstretch
 \edat
 Here is an example where all these options are used:
-\bdsni
+\bplin
 [Bluebox]
 define   = True
 newenv   = \providecommand{\shadedquote}{}
@@ -452,7 +478,7 @@ ereplace = \end{Verbatim}
            \noindent
 bstretch = 0.85
 fontsize = footnotesize
-\edsni
+\eplin
 
 The example above merely shows what the code looks like, the details are given
 next.
@@ -461,10 +487,10 @@ Each section has a heading enclosed by brackets. This heading will also be the
 name of the environment. The options for this environment should follow on the
 lines below. For instance, to define the Ptex2tex environment 'Extra'
 and the option \code{breplace}, we would write:
-\bdsni
+\bplin
 [Extra]
 breplace = \begin{Verbatim}
-\edsni
+\eplin
 
 In addition to the sections defining the environments, there is a section
 \code{[names]}. In this section we map environment keys to
@@ -490,16 +516,16 @@ pro = Bluebox
 pro = Graybox
 \edat
 
-\subsection{Defining new environments.}
+\subsection{Defining new environments}
 A Ptex2tex environment in the configuration file is defined by a
 section heading and several options. A minimum requirement of an environment is
 that the options \code{breplace} and \code{ereplace} are defined. Hence, for
 the environment 'Extra', the following lines should exist and be defined:
-\bdsni
+\bplin
 [Extra]
 breplace = \begin{Verbatim} 
 erplace = \end{Verbatim}
-\edsni
+\eplin
 In this case they define a simple \code{Verbatim} environment. \code{breplace}
 and \code{ereplace} control what \LaTeX~commands that should be returned at the
 beginning and at the end of the Ptex2tex environment, respectively.
@@ -543,6 +569,11 @@ is no equivalent\\ (\code{\}\code{provideenvironment}) for environments, but
 since \code{\}\code{renewenvironment} simply checks if the name of the
 environment (\code{shadedquote}) is defined, not if it is defined as an
 environment, this works. 
+
+When defining new environments as described above, the name of the
+environment must be unique in the configuration file. For example,
+``shadedquote'' must not be defined in another environment.
+Ptex2tex is normally able to detect such problems.
 
 It is also possible to use an environment that is
 defined elsewhere, say in third-party \LaTeX~package. One can then use the option
@@ -588,7 +619,7 @@ of the option 'bstretch'. The \code{'\%'} indicates that the variable within the
 following parenthesis is to be interpolated. The 's' after the last
 parenthesis means that the option to be inserted is a string. See the
 following code example:
-\bdsni
+\bplin
 breplace = \begin{Verbatim}[fontsize=\%(fontsize)s,tabsize=8,
            baselinestretch=%(bstretch)s,
 	   defineactive=\def\#{\itshape \CommentChar},fontfamily=tt]
@@ -597,7 +628,7 @@ ereplace = \end{Verbatim}
 	   \noindent %%This is a \LaTeX comment
 bstretch = 0.85
 fontsize = footnotesize
-\edsni
+\eplin
 Often, the option text for 'breplace' or 'ereplace' spans several lines (of
 \LaTeX~code). It is then important that the text for the lines following the
 first use the same indentation. It is possible to comment out some of the
@@ -624,7 +655,7 @@ but this will result in a warning.
 %\code{fontsize} and \code{margin}. If they are not set at runtime, their
 %default value is \code{None}.
 
-\subsection{Remarks about \LaTeX~packages.}
+\subsection{Remarks about \LaTeX~packages}
 Note that some of the environments present in the environment configuration
 file require certain \LaTeX~packages to be available. Specifically, you should
 use the following lines in the header:
@@ -646,7 +677,7 @@ copy the style file to the current working directory. This file, as well as the
 code for Ptex2tex. The installation script for the package will try to
 install these to the computers' \LaTeX~folders, see the README file.
 
-\subsection{Additional keywords.}
+\subsection{Additional keywords}
 In addition to the keywords starting with \code{@@@} and the keywords
 associated with beginning
 and ending Ptex2tex environments, there is another keyword available,
@@ -669,7 +700,7 @@ of the document being marked as a math environment. Using
 \code{\}\code{code{}\code{\}\code{\$}\smaller\verb!}!\larger~instead gives us the same result
 in the final document without this problem appearing in our editor.
 
-\subsection{Mapping of keywords to environments.}
+\subsection{Mapping of keywords to environments}
 The default mapping between Ptex2tex keywords and environments is included for
 reference:
 \bdat
@@ -711,78 +742,363 @@ rule = Tip
 summ = Note
 \edat
 
-\subsection{Demo of the different environments.}
-All the environments included with Ptex2tex are a result of the needs of the
-author. One might want to change these, or add new ones. Several of the
-environments are plain copies of each other, at the time of writing this. 
-Here is a short overview of the different environments:
-\bpro
-'pro' is used for this text.
-It is meant for longer program code.
-\epro
-\bsni
-'sni' is used for this text.
-It is meant for shorter program code.
-\esni
-\bcod
-'cod' is used for this text.
-It is meant for one-line program code.
-\ecod
-\bdat
-'dat' is used for this text.
-It is meant for the inclusion of plain data files.
-\edat
-\bdsni
-'dsni' is used for this text.
-It is meant for the inclusion of short pieces of plain data files.
-\edsni
-\bsys
-'sys' is used for this text.
-It is meant for writing longer commands in a terminal window.
-\esys
-\bslin
-'sys' is used for this text.
-It is meant for writing a single line in a terminal window.
-\eslin
-\bcc
-'cc' is used for this text.
-This is for computer code without any colored background.
-\ecc
-\bccl
-'ccl' is used for this text.
-This is for computer code without any colored background,
-and with numbering of the lines.
-\eccl
-\bipy 'ipy' is used for this text.
-It is meant for code statements in the interactive IPython shell.
-Notice that the text should start immediately after the keyword
-defining the beginning of the environment in order for the text 
-to start after the IPython prompt.
-\eipy
-\bpy 
-'py' is used for this text.
-It is meant for longer code statements in the regular Python shell.
-\epy
-\bplin
-'plin' is used for this text.
-It is meant for single line code statements in the regular Python shell.
-\eplin
-\bver
-'ver' is used for this text.
-It is a simple verbatim environment.
-\ever
-\bwarn
-'warn' is used for this text.
-warning.eps needs to be accessible by \LaTeX.
-\ewarn
-\brule
-'rule' is used for this text.
-tip.eps needs to be accessible by \LaTeX.
-\erule
-\bsumm
-'summ' is used for this text.
-note.eps needs to be accessible by \LaTeX.
-\esumm
+\subsection{Demo of the different environments}
+
+There is a test script \code{testconfig.py} that can read a
+configuration file and make a \LaTeX{} demo of all environments in
+that file. Just run the script in a directory with a \code{.ptex2tex.cfg}
+file. The result is a file \code{tmp_names} with definition of
+new environment keys pointing to all environments found in the
+configuration file. This \code{tmp_names} can be appended to your
+\code{.ptex2tex.cfg}. The script \code{testconfig.py} also makes a
+file \code{tmp_latex} which can be copied into any \LaTeX{} in
+Ptex2tex format (i.e., a \code{.p.tex} file) to see a demo of
+the environments. Below is such a \LaTeX{} demo.
+
+% demo created by inserting the tmp_latex file generated by ../bin/testconfig.py
+
+\noindent
+Here is a demo of the environment 'Verb':
+\bn1
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en1
+
+
+\noindent
+Here is a demo of the environment 'CodeRule':
+\bn2
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en2
+
+
+\noindent
+Here is a demo of the environment 'CodeTerminal':
+\bn3
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en3
+
+
+\noindent
+Here is a demo of the environment 'CodeIndented':
+\bn4
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en4
+
+
+\noindent
+Here is a demo of the environment 'CodeIndented2':
+\bn5
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en5
+
+
+\noindent
+Here is a demo of the environment 'Code':
+\bn6
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en6
+
+
+\noindent
+Here is a demo of the environment 'CodeLineNo':
+\bn7
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en7
+
+
+\noindent
+Here is a demo of the environment 'Warnings':
+\bn8
+Some message can be written here as ordinary
+text.
+\en8
+
+
+\noindent
+Here is a demo of the environment 'Tip':
+\bn9
+Some message can be written here as ordinary
+text.
+\en9
+
+
+\noindent
+Here is a demo of the environment 'Note':
+\bn10
+Some message can be written here as ordinary
+text.
+\en10
+
+
+\noindent
+Here is a demo of the environment 'Yellow':
+\bn11
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en11
+
+
+\noindent
+Here is a demo of the environment 'RedYellow':
+\bn12
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en12
+
+
+\noindent
+Here is a demo of the environment 'Blue':
+\bn13
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en13
+
+
+\noindent
+Here is a demo of the environment 'Gray':
+\bn14
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en14
+
+
+\noindent
+Here is a demo of the environment 'RedYellow\_snippet':
+\bn15
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en15
+
+
+\noindent
+Here is a demo of the environment 'Blue\_snippet':
+\bn16
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en16
+
+
+\noindent
+Here is a demo of the environment 'YellowS':
+\bn17
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en17
+
+
+\noindent
+Here is a demo of the environment 'RedYellowS':
+\bn18
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en18
+
+
+\noindent
+Here is a demo of the environment 'RedYellowBarS':
+\bn19
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en19
+
+
+\noindent
+Here is a demo of the environment 'BlueS':
+\bn20
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en20
+
+
+\noindent
+Here is a demo of the environment 'BlueBar':
+\bn21
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en21
+
+
+\noindent
+Here is a demo of the environment 'BlueBarS':
+\bn22
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en22
+
+
+\noindent
+Here is a demo of the environment 'Gray2':
+\bn23
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en23
+
+
+\noindent
+Here is a demo of the environment 'Blue\_sp':
+\bn24
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en24
+
+
+\noindent
+Here is a demo of the environment 'Gray\_sp':
+\bn25
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en25
+
+
+\noindent
+Here is a demo of the environment 'BlueS\_sp':
+\bn26
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en26
+
+
+\noindent
+Here is a demo of the environment 'SaveVerb1':
+\bn27
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en27
+
+
+\noindent
+Here is a demo of the environment 'SaveVerb2':
+\bn28
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en28
+
+
+\noindent
+Here is a demo of the environment 'SaveVerb3':
+\bn29
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en29
+
+
+\noindent
+Here is a demo of the environment 'Gray\_1p1':
+\bn30
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en30
+
+
+\noindent
+Here is a demo of the environment 'Gray\_1p2':
+\bn31
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en31
+
+
+\noindent
+Here is a demo of the environment 'Gray\_1p3':
+\bn32
+v0 = 5                    # velocity
+g = 9.81                  # acceleration of gravity
+t = 0.6                   # time
+y = v0*t - 0.5*g*t**2     # vertical position
+print y
+\en32
+
 
 \section{Support}
 Please contact \code{ilmarw@simula.no} for bug reports, feature requests and
