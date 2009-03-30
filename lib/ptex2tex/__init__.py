@@ -452,7 +452,7 @@ class _Ptex2tex:
                 elif lines[i].startswith(value[2]):
                     lines[i] = lines[i].replace(value[2], obj.ereplace)
                 elif lines[i].strip().startswith(value[1]) or lines[i].strip().startswith(value[2]):
-                    self.cleanup = False
+                    self._cleanup = False
                     print '***warning: extra white-space detected, check line %d in %s' %(i, self.transfile)
         block = '\n'.join(lines)
         outfile.write(block)
@@ -464,13 +464,13 @@ class _Ptex2tex:
 
     def run(self):
         """Runs through the different functions necessary to complete the conversion."""
-        self.cleanup = True
+        self._cleanup = True
         self.preprocessor()
         self.inline_tt()
         self.include_file()
         self.include_command()
         self.convert()
-        if self.cleanup:
+        if self._cleanup:
             self.cleanup()
 
 def init(argv=sys.argv):
