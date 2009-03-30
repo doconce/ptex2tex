@@ -7,6 +7,9 @@ Version 0.31
 - Added support for specifying font size for inline code (\code{}), set in
   config file. Can be 'smaller' or integer.
 
+- Added check for consistant use of renewenvironments. Also, added script
+  testconfig.py for creating tests of all environments.
+
 Version 0.3
 ============
 
