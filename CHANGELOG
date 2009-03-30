@@ -10,6 +10,11 @@ Version 0.31
 - Added check for consistant use of renewenvironments. Also, added script
   testconfig.py for creating tests of all environments.
 
+- Added support for specifying preprocess options in config file.
+
+- Add warning in case environment keyword starts with space, do not remove 
+  temporary files.
+
 Version 0.3
 ============
 

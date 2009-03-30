@@ -4,7 +4,9 @@
   - Support for preprocess commandline arguments in ConfigFile (own section).
   - Check for names in renewenvironments.
   - Testconfig.py.
-  
+  - Warning for space in front of environment keys, do not delete temp
+    files.
+
 - Testconfig.py should not be executable, instead called when running
 ptex2tex --test or similar.
 
