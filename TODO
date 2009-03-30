@@ -1,7 +1,7 @@
 - Add changes made for 0.31 to documentation:
   - '~' for space in CODE/DATA
   - New section 'inline_code' in ConfigFile.
-  - Support for ptex2tex commandline arguments.
+  - Support for preprocess commandline arguments in ConfigFile (own section).
   - Check for names in renewenvironments.
   - Testconfig.py.
   
