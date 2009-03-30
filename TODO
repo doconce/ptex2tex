@@ -4,6 +4,9 @@
   - Support for ptex2tex commandline arguments.
   - Check for names in renewenvironments.
   - Testconfig.py.
+  
+- Testconfig.py should not be executable, instead called when running
+ptex2tex --test or similar.
 
 - Change the name of the classes for the environment from their
   original names to names describing their looks, the way it is now is
