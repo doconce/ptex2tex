@@ -166,7 +166,7 @@ def envs(dirname):
     # check that newenvironment names are different:
     newenvir_names = []
     newenvir_types = []
-    exceptions = ('shadedwbar',)
+    exceptions = ('shadedwbar', 'shadedskip', )
     import re
     c = re.compile(r'renewenvironment\{(.+?)\}', re.DOTALL)
     for key in supported:

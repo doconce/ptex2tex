@@ -131,11 +131,13 @@ class _Ptex2tex:
         if 'defines' in self.preprocess:
             s = self.preprocess['defines']
             for define in s.split(','):
+                define = define.strip()
                 if define:  # non-empty string
                     self.preprocess_defines[define] = True
         if 'undefines' in self.preprocess:
             s = self.preprocess['undefines']
             for define in s.split(','):
+                define = define.strip()
                 if define:  # non-empty string
                     # this is not right:
                     #self.preprocess_defines[define] = False
@@ -145,6 +147,7 @@ class _Ptex2tex:
                         del self.preprocess_defines[define]
         if 'includes' in self.preprocess:
             s = self.preprocess['includes']
+            # comma-separated list acts as a tuple for eval:
             self.preprocess_includes = eval(s)
         else:
             self.preprocess_includes = []
@@ -235,6 +238,11 @@ class _Ptex2tex:
             open(self.preoutfile, 'w').write(open(self.ptexfile).read())
             return
         print "running preprocessor... ",
+        if self.preprocess_defines:
+            h = [name for name in self.preprocess_defines]
+            print 'defines: %s ' % (str(h)[1:-1]),
+        if self.preprocess_includes:
+            print 'includes: %s ' % (str(self.preprocess_includes)[1:-1]),
         preprocess.preprocess(self.ptexfile, self.preoutfile,
                               defines=self.preprocess_defines,
                               includePath=self.preprocess_includes,
