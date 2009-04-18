@@ -1004,11 +1004,13 @@ print y
 \noindent
 Here is a demo of the environment 'TiagoCpp':
 \bn2
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+void* crash(double*** array, int m, int n=50)
+{
+  // some dangerous operation
+  MySpecialClass p = new MySpecialClass();
+  p.set_danger = true;
+  p.run_danger();
+}
 \en2
 
 
