@@ -138,10 +138,12 @@ def envs(dirname):
             print "the environment type '%s' is not defined in the configuration file" % (envir_type)
             sys.exit(7)
         for option in config.options(envir_type):
-            curdict = supported0[envir_name].__dict__                    
-            if not hasattr(supported0[envir_name], option):
-                print "***warning: unknown option '%s' in environment '%s' " % \
-                      (option, envir_type)
+            curdict = supported0[envir_name].__dict__
+            # Disable warninga, we should encourage the use of user defined
+            # variables in config file:
+            #if not hasattr(supported0[envir_name], option):
+            #    print "***warning: unknown option '%s' in environment '%s' " % \
+            #          (option, envir_type)
             if option == 'define':
                 curdict.update({option: config.getboolean(envir_type, option)})
             else:
