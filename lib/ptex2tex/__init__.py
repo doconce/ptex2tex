@@ -93,8 +93,14 @@ class _Ptex2tex:
     __doc__ = doc()
     
     def __init__(self, argv=sys.argv):
-        """Reads and sets the commandline arguments."""
-        parser = OptionParser()
+        """
+        Command-line arguments:
+        -v: turn on verbose mode
+        -DVAR: define    variable/macro VAR (can be many of these)
+        -UVAR: undefine  variable/macro VAR (can be many of these)
+
+        All other options are controlled by the config file.
+        """
 
         # Define temporary files:
         self.file = argv[-1]
@@ -110,10 +116,8 @@ class _Ptex2tex:
         self.transfile = self.file+".tmp2"
         self.texfile = self.file+".tex"
         
-        parser.add_option('-v', action="store_true", dest="verbose", help='enable debug output')
-        
-        self.options, self.args = parser.parse_args(argv[1:])
-        self.verbose = self.options.verbose
+        self.verbose = True if '-v' in argv else False
+        # other command-line args are defined below
                 
         # Returns a dict where the keys are the names of the classes,
         # and the values are a tuple consisting of an instance of the class,
@@ -134,6 +138,13 @@ class _Ptex2tex:
                 define = define.strip()
                 if define:  # non-empty string
                     self.preprocess_defines[define] = True
+        # add defines from the command line:
+        for i in range(len(argv)):
+            if argv[i].startswith('-D'):
+                define = argv[i][2:]
+                self.preprocess_defines[define] = True
+                del argv[i]
+
         if 'undefines' in self.preprocess:
             s = self.preprocess['undefines']
             for define in s.split(','):
@@ -145,6 +156,13 @@ class _Ptex2tex:
                     # the defines dict are always treated as True :-(
                     if define in self.preprocess_defines:
                         del self.preprocess_defines[define]
+        # add undefines from the command line:
+        for i in range(len(argv)):
+            if argv[i].startswith('-U'):
+                define = argv[i][2:]
+                del self.preprocess_defines[define]
+                del argv[i]
+
         if 'includes' in self.preprocess:
             s = self.preprocess['includes']
             # comma-separated list acts as a tuple for eval:
@@ -158,55 +176,6 @@ class _Ptex2tex:
             print "missing option 'font' in inline code"
             sys.exit(5)
 
-#        # Define some global choices:
-#        v = False
-#        parser.add_option('-f', default="normal",
-#                          choices=["normal","small","tiny"],
-#                          help="fontsize, overridden by configuration file")
-#        parser.add_option('-m', default=1, choices=['0','1'],
-#                          help="margin, overridden by configuration file")
-#
-#        self.verbose = 0 #Verbosity for debugging
-#        if v:
-#            print self.options
-#
-#        self.font = self.options.f
-#        self.bstretch, self.fontsize = self.attr(self.font)
-#        self.margin = self.options.m
-#       
-#        # Based on the available environments in the dict, create
-#        # commandline argument flags:
-#         for key, value in self.supported.items():
-#             name = value[0].name
-#             fullname = key
-#             parser.add_option('--'+name+'f', default=None,
-#                               choices=["normal","small","tiny"],
-#                               help=key+" fontsize")
-#             parser.add_option('--'+name+'m', default=None,
-#                                choices=['0','1'], help=key+" margin")
-#
-#        # Set the correct attributes for all environments,
-#        # global attributes overridden if defined for a
-#        # specific environment (from commandline argument):
-#         for value in self.supported.values():
-#             value[0].fontsize = self.fontsize
-#             value[0].bstretch = self.attr(self.font)[0]
-#             value[0].margin = self.margin
-#             font = eval("self.options." + value[0].name + "f")
-#             if font is not None:
-#                 value[0].fontsize = self.attr(font)[1]
-#                 value[0].bstretch = self.attr(font)[0]
-#             margin = eval("self.options." + value[0].name + "m")
-#             if margin is not None:
-#                 value[0].margin = margin
-#
-#    def attr(self, font):
-#        """Defines the fontsize and baselinestretch based on the font input."""
-#        if font == "small":
-#            return (0.85, r"fontsize{9pt}{9pt}\selectfont")
-#        elif font == "tiny":
-#            return (0.6, r"fontsize{7pt}{7pt}\selectfont")
-#        return (0.85, r"footnotesize")
 
     def strip(self, text):
         """Remove empty lines, but not single white-spaces.
