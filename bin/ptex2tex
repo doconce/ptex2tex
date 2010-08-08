@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 """Executable script associated with ptex2tex module."""
-import ptex2tex
 import sys, os
 if len(sys.argv) < 2:
-    os.system(sys.argv[0] + " -h")
+    print 'ptex2tex [-v | -Dvar -Uvar] file'
+    print '-D and -U turn on or off preprocessor variables (can be many)'
+    print '-v denotes verbose mode'
+    print 'file is given as basename, without any .p.tex extension'
+    print 'other options are given in the config file'
     sys.exit(1)
-sys.exit(ptex2tex.init(sys.argv))
+
+import ptex2tex
+ptex2tex.init(sys.argv)

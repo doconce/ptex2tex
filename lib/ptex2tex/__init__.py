@@ -451,7 +451,7 @@ class _Ptex2tex:
             self.cleanup()
 
 def init(argv=sys.argv):
-    instance = _Ptex2tex(argv)
+    insta<nce = _Ptex2tex(argv)
     instance.run()
     print "done\n"
 
