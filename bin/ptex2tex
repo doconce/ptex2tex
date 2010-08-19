@@ -5,7 +5,7 @@ if len(sys.argv) < 2:
     print 'ptex2tex [-v | -Dvar -Uvar] file'
     print '-D and -U turn on or off preprocessor variables (can be many)'
     print '-v denotes verbose mode'
-    print 'file is given as basename, without any .p.tex extension'
+    print 'file is given as basename, or with the .p.tex extension'
     print 'other options are given in the config file'
     sys.exit(1)
 
