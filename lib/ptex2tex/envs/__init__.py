@@ -90,7 +90,7 @@ def envs(dirname):
 
     cfgfile = os.path.join(os.path.join(dirname, '.ptex2tex.cfg'))
     if os.path.isfile(cfgfile):
-        print 'found local config file'
+        print 'using local config file .ptex2tex.cfg'
 
     homecfgfile = os.path.join(os.path.expanduser('~'), '.ptex2tex.cfg')
     if not os.path.isfile(homecfgfile):

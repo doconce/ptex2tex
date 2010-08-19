@@ -206,7 +206,7 @@ class _Ptex2tex:
             print 'could not find the preprocess program, skipping preprocessing...'
             open(self.preoutfile, 'w').write(open(self.ptexfile).read())
             return
-        print "running preprocessor... ",
+        print "running preprocessor on %s... " % self.ptexfile,
         if self.preprocess_defines:
             h = [name for name in self.preprocess_defines]
             print 'defines: %s ' % (str(h)[1:-1]),
@@ -451,7 +451,7 @@ class _Ptex2tex:
             self.cleanup()
 
 def init(argv=sys.argv):
-    insta<nce = _Ptex2tex(argv)
+    instance = _Ptex2tex(argv)
     instance.run()
     print "done\n"
 
