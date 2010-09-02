@@ -28,7 +28,7 @@ LaTeX document.  Just use Ptex2tex and leave the decision to the
 future. It takes seconds to change your mind anyway.
 
 Read the 
-https://ptex2tex.googlecode.com/svn/trunk/doc/doc.pdf<ptex2tex manual>
+https://ptex2tex.googlecode.com/svn/trunk/doc/ptex2tex_doc.pdf<ptex2tex manual>
 for further information and demos.
 
 ===== Required Software =====
@@ -37,5 +37,6 @@ Ptex2tex requires the following additional software:
 
  * http://code.google.com/p/preprocess<preprocess>
  * LaTeX packages: fancyvrb, moreverb, pythonhighlights, minted
-   (see URL:"https://ptex2tex.googlecode.com/svn/trunk/latex/styles")
+   (see https://ptex2tex.googlecode.com/svn/trunk/latex/styles<styles> 
+   in the ptex2tex tree, which include a corrected version of `minted.sty`
  * http://pygments.org<pygments>

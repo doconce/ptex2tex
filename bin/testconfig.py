@@ -130,7 +130,7 @@ height_and_velocity(&height, &velocity, 0.5, 0.143);
 \noindent
 Here is a demo of the environment '%s':
 \bn%d
-# Here is some Fortran 77 code
+C Here is some Fortran 77 code
 
        program ball
        real*8 v0, time, v, h
@@ -140,7 +140,7 @@ Here is a demo of the environment '%s':
 
        subroutine hgtvel(y, v, t, v0)
        real*8 y, v, t, v0
-C      Invoke some advanced math computations.
+C      Invoke some advanced math computations
        real*8 g
        g = 9.81
 C      height:
@@ -175,10 +175,12 @@ for i in range(1, index):
     envir = envir_types[i-1]
     if envir in ('Warnings', 'Tip', 'Note'):
         code = snippets['box']
+    elif envir in ('CodeRule', 'CodeTerminal'):
+        code = snippets['smallpy']
     elif envir.startswith('Minted_'):
         code = snippets[envir[7:]]
     else:
-        code = snippets['smallpy']
+        code = snippets['Python']
         
     latex.write(code % (envir.replace('_', '\\_'), i, i))
 
