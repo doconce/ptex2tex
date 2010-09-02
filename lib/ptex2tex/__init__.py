@@ -433,6 +433,7 @@ class _Ptex2tex:
                     print '***warning: extra white-space detected, check line %d in %s' %(i, self.transfile)
         block = '\n'.join(lines)
         outfile.write(block)
+        print 'done %s -> %s' % (self.ptexfile, self.texfile)
 
     def cleanup(self):
         """Function for deleting temporary files."""
@@ -453,6 +454,5 @@ class _Ptex2tex:
 def init(argv=sys.argv):
     instance = _Ptex2tex(argv)
     instance.run()
-    print "done\n"
 
 __doc__ = doc()

@@ -61,6 +61,18 @@ If none of these options behaves as required (for instance, you would like
 to install them to $HOME/texmf), then the variable 'latex_dir' in setup.py 
 should be set to this directory.
 
+Installation of additional software
+===================================
+
+Ptex2tex requires the preprocess tool by Trent Mick, found at
+http://code.google.com/p/preprocess/
+If the minted environments in the default Ptex2tex configuration file
+are used, the pygments Python package must be installed:
+http://pygments.org/ (see also http://minted.googlecode.com).
+Several LaTeX styles are needed: fancyverb, moreverb, pythonhighlights,
+and minted. Most of these .sty files are found in the latex/styles
+subdirectory.
+
 Making sure LaTeX finds the files at runtime
 ============================================
 

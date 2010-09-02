@@ -3,9 +3,6 @@
 \usepackage{ptex2tex}
 \usepackage{pythonhighlight}
 \begin{document}
-% TITLE: ptex2tex tutorial\n
-% AUTHOR: Ilmar M. Wilbers, Simula Research Laboratory, Univ. of Oslo\n
-% DATE: Mar 25, 2008\n
 
 \title{Ptex2tex: Flexible Handling of Computer Code in \LaTeX{} Documents}
 \author{Ilmar Wilbers \and Hans Petter Langtangen}
@@ -19,14 +16,45 @@ Email: \texttt{\{ilmarw,hpl\}@simula.no}\\
 \section{Introduction}
 \subsection{What is Ptex2tex?}
 Ptex2tex is a tool that allows you to replace \LaTeX~environment declarations
-with simple keywords. Say that you are writing a book or an article, and there
-is a certain style of box that you use frequently. The annoying thing is that
-this box has a lot of \LaTeX~syntax connected with it in order for it to look like
-the way you want it to. Let's look at an example involving a blue box:
+with simple keywords. In a way, Ptex2tex allows you to create \LaTeX{}
+packages without any sophisticated knowledge on how to write
+\LaTeX{} packages. The idea behind Ptex2tex is code generation: instead
+of hiding complicated \LaTeX{} constructions in complex \LaTeX{}
+packages, one simply generates the necessary \LaTeX{} commands on the
+fly, from a compact begin-end environment indication in the \LaTeX{}
+source.
+This implies that you have to preprocess your LaTeX source
+to make an ordinary LaTeX file that can be compiled in the usual way.
+
+The main application of Ptex2tex is for inserting verbatim-style
+computer code in \LaTeX{} documents.  The main application of Ptex2tex
+is for inserting verbatim-style computer code in \LaTeX{}
+documents. Code can be copied directly from the source files of the
+software (complete files or just snippets), and output from programs
+can be created and copied into the documentation as a part of running
+Ptex2tex.  This guarantees that your LaTeX document contains the most
+recent version of the program code and its output!
+
+
+With the default Ptex2tex
+configuration style, you can switch between 30+ styles for computer
+code within seconds and just recompile your \LaTeX{} files.
+Even in a several-hundred pages book it takes seconds to consistently
+change various styles for computer code, terminal sessions, output
+from programs, etc. This means that you never have to worry about
+choosing a proper style for computer/verbatim code in your \LaTeX{} document.
+Just use Ptex2tex and leave the decision to the future. It takes
+seconds to change your mind anyway.
+
+Let us look at an example.
+Say that you are writing a book or an article, and there
+is a certain style of box you tend to use frequently. The annoying thing is that
+this box has a lot of \LaTeX~syntax connected with it to make it look like
+you want. Here is an example involving a blue box:
 \bsni
 import sys; print 'script name is', sys.argv[0]
 \esni
-The \LaTeX~source code for this box looks as follows:
+The \LaTeX~source code for this box needs quite some statements:
 \begin{verbatim}
 \providecommand{\shadedquoteBluesnippet}{}
 \renewenvironment{shadedquoteBluesnippet}[1][]{
@@ -57,7 +85,7 @@ import sys; print 'script name is', sys.argv[0]
 \emybox
 \edat
 The \LaTeX{} code corresponding to the \code{mybox} environment, i.e.,
-how the box should look like, can now be defined in a configuration file. 
+how the box should look like, can be defined in a configuration file. 
 It is then easy to work with boxes, typically contining computer code,
 in a large document and with Ptex2tex just use some environment names
 rather than the full, complicated \LaTeX{} surroundings.
@@ -65,7 +93,8 @@ That is,
 the
 Ptex2tex approach allows much less code, and makes it easier to concentrate on the contents
 of the document we are writing and not the \LaTeX~code necessary to create such
-a box. Suppose you want the box to have a completely different look:
+a box. 
+Suppose you want the box to have a completely different look:
 \bcod
 import sys; print 'script name is', sys.argv[0]
 \ecod
@@ -102,16 +131,24 @@ accordingly if the change is to be made for all boxes using this style.
 In this way, you do not need to
 make any changes to the document itself at all!
 
-Another major advantage of Ptex2tex is that it provides means to include text from files as well as
-output from programs ran at the commandline at compile time. Say
-that you are writing a book about programming or a manual for a programming
-tool. You frequently include computer program
-code in your document, and also the output of running programs. While writing
-the document, you might make changes to programs and the output of
-them. Instead of cutting and pasting both the actual program and the output
-every time it is changed, using Ptex2tex, the only thing you need to do
-is to run \code{ptex2tex} on the document. Let's look at an example. We
-include the following in the \code{.p.tex} document:
+At this point you may think that definition of new
+\LaTeX{} environments, stylefiles and packages solves the problem
+outlined above. This is not always true, as we elaborate on in the
+``Motivation'' section below. Ptex2tex, which is built on 
+\LaTeX{} code generation, apperas to be a simpler
+and more powerful technology.
+
+Another major advantage of Ptex2tex is that it provides means to
+include text from files, \emph{or from parts of files}, as well as
+output from programs ran at the command line at compile time. Say that
+you are writing a book about programming or a manual for a programming
+tool. You frequently include computer program code in your document,
+and also the output of running programs. While writing the document,
+you might make changes to programs and the output of them. Instead of
+cutting and pasting both the actual program and the output every time
+it is changed, using Ptex2tex, the only thing you need to do is to run
+\code{ptex2tex} on the document. Let's look at an example. We include
+the following in the \code{.p.tex} document:
 \bdat
  @@@CODE division.py def@if
  The output from running this function with a=2 and b=0 is:
@@ -130,11 +167,12 @@ when writing large \LaTeX~documents about computer programming where
 one needs to include a lot of programs and code snippets.
 
 \subsection{Motivation}
+
 Why do we not simply define \LaTeX~environments and use these directly in our
 files? We consider Python more powerful and convenient than \LaTeX~for
 generating environments. Also, including text from file using search
 expressions as well as
-including results from programs ran at the commandline are very challenging, if
+including results from programs ran at the command line are very challenging, if
 not impossible, tasks in \LaTeX. Imagine that you want to include a certain
 paragraph or code block from a file. Using plain \LaTeX~this means copying the
 necessary text from the source file, and pasting it into the \LaTeX~file. If
@@ -149,17 +187,29 @@ easier. As Ptex2tex uses Python configuration files to define commands, one does
 know Python in order to extend and tailor Ptex2tex.
 
 \subsection{Structure of this tutorial}
-This tutorial is divided in four sections. Following the introduction is a
-section about preprocessor statements, followed by a section on including files
+This tutorial is divided in four sections. Following the introduction is 
+section about running the \emp{ptex2tex} program and generating
+native \LaTeX{} code, followed by a section on including files
 and output from program execution. Finally, we will explain how the
 Ptex2tex environments work and how we can configure them.
 
 \section{The prepocessing step}
-It is important that the extension of the files we are working with is
-\code{.p.tex}. In this way, all (most) editors recognize the files as normal
-\LaTeX~files, with all advantages implied.
-We will start by looking at what happens when we run the command
-\code{ptex2tex test.p.tex} on the commandline. If the extension of
+When using Ptex2tex, your \LaTeX{} source file must have the extension
+\code{.p.tex}. All edits to your text must be done in this file.
+Running the program \emp{ptex2tex} on the \emp{.p.tex} file produces
+an ordinary \LaTeX{} file, which can be compiled to a \emp{.dvi} and
+\emp{.pdf} file in the usual way. However, if you apply any of
+the \emp{minted} code environments in your \emp{.p.tex}
+file (\code{Minted_Python} for instance), you must run
+\emp{latex} with the option \code{-shell-escape} option.
+Most editors will recognize a \emp{.p.tex} file as a \LaTeX{} or \TeX{}
+file and invoke relevant styles.
+
+Let us start by looking at what happens when we run the command
+\bsys
+ptex2tex test.p.tex
+\esys
+on the command line. If the extension of
 the file is not \code{.p.tex}, the program will exit with an error
 message. If no extension is given, that is, we run \code{ptex2tex test}, it
 is assumed that we are looking for the file \code{test.p.tex}.
@@ -168,7 +218,7 @@ is assumed that we are looking for the file \code{test.p.tex}.
 % #ifdef INCLUDE_PREPROCESS
 The first step of Ptex2tex consists of running Trent Mick's \code{preprocessor}. This is a Python
 package that allows us to use preprocessor statements in files, just like the
-preprocessor statements that are known from the \code{C} language. These
+preprocessor statements known from the \code{C} and \code{C++} languages. These
 statements take the form of normal comments in the source file, but when
 running \code{preprocessor}, these are treated in a special way. For
 instance, we can include whole files, or include certain blocks of
@@ -291,7 +341,7 @@ from, computer programs.
 
 \subsection{\texttt{@@@CMD}}
 A line \emph{starting} with the statement \code{@@@CMD} indicates that we want to include
-the output from a shell command with commandline arguments. All text after
+the output from a shell command with command-line arguments. All text after
 the statement \code{@@@CMD} will be executed, except the text after (and including)
 \code{'#'}. The character after \code{'#'} defines how much of the commands we
 want to execute should be part of the final text to be included in our
@@ -633,7 +683,7 @@ All options within a section of the configuration file are parsed within
 Ptex2tex. You can define your own options beyond the six mentioned,
 but this will result in a warning.
 %If you try to run \code{ptex2tex -h}, you will see that for every environment
-%that is found, there are two command line arguments that are available. The
+%that is found, there are two command-line arguments that are available. The
 %names of these are the keyword for the class followed by a \code{f} and a
 %\code{m}. For \code{pro}, these are thus \code{--prof} and
 %\code{--prom}. These stand for 'fontsize' and 'margin', respectively. Although
@@ -645,21 +695,28 @@ but this will result in a warning.
 \subsection{Remarks about \LaTeX~packages}
 Note that some of the environments present in the environment configuration
 file require certain \LaTeX~packages to be available. Specifically, you should
-use the following lines in the header:
+use the following lines in the header and make sure the corresponding
+packages are installed on your system (many of the stylefiles are found
+in the \code{latex/styles} directory of the Ptex2tex source):
 \bdat
 \usepackage{relsize,fancyvrb,moreverb,epsfig,framed}
-\usepackage{color,listings,pythonhighlight}
+\usepackage{color,listings,pythonhighlight,minted}
 \edat
+The \emp{minted} package also requires the Python tool \emp{pygments}
+to be installed.
+
 The Ptex2tex package comes with a \LaTeX~style file
-\code{ptex2tex.sty} containing the above commands, plus some tweaks of
+\code{ptex2tex.sty} containing the above 
+\emp{usepackage} commands, plus some tweaks of
 packages.
-If the \code{ptex2tex.sty} file is installed correctly, 
+If the \code{ptex2tex.sty} file is installed correctly
 so that \LaTeX~can find it, one can simply use
 \bdat
 \usepackage{ptex2tex}
 \edat
-One can also simply
-copy the style file to the current working directory. This file, as well as the
+One can also just
+copy the \code{ptex2tex.sty} 
+file to the current working directory. This file, as well as the
 \code{.eps} files used for the Ptex2tex environments 'Warnings',
 'Rules', and 'Summation', are located in the folder \code{latex} in the source
 code for Ptex2tex. The installation script for the package will try to
@@ -674,13 +731,17 @@ long as it is contained within a single line. This allows the use of any
 character, we can for instance write 
 \code{\}\code{code}\code{{}\code{@#_%}\verb!}! without \LaTeX~giving
 us any errors. The result is similar to the \code{\}\code{texttt}
-\LaTeX~command, but it has nicer typesetting of for instances underscores.
-It is really just a slightly modified normal verbatim, and it
-is based on the \code{\}\code{verb!}\code{...!} \LaTeX~command. The
-modification consists of removing the escape character in \LaTeX, which is
-\code{\}, in front of the characters \code{'\#'}, \code{'\%'}, \code{'\@'},
-\code{'\$'} and \code{'\_'}. Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
-in the text for the rest of the line after the character \code{\%} being marked as a comment in most
+\LaTeX~command, but it has nicer typesetting of (for instance) underscores.
+The \emp{code} command is really just a slightly modified normal 
+inline verbatim construction where the font size can be controlled. 
+Moreover,
+the escape character in \LaTeX, which is
+\code{\}, is removed in front of the characters 
+\code{'\#'}, \code{'\%'}, \code{'\@'},
+\code{'\$'} and \code{'\_'}. 
+Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
+in the text for the rest of the line after the character 
+\code{\%} being marked as a comment in most
 editors, which is confusing. Writing
 \code{\}\code{code{}\code{\$}\smaller\verb!}!\larger~results in the text for the rest
 of the document being marked as a math environment. Using
@@ -729,6 +790,8 @@ rule = Tip
 # note box:
 summ = Note
 \edat
+You are free to define completely new keywords (and environments)
+in the configuration file.
 
 \subsection{Demo of the different environments}
 
@@ -755,300 +818,530 @@ the environments. Below is such a \LaTeX{} demo.
 \noindent
 Here is a demo of the environment 'Verb':
 \bn1
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en1
 
 
 \noindent
 Here is a demo of the environment 'CodeRule':
 \bn2
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en2
 
 
 \noindent
 Here is a demo of the environment 'CodeTerminal':
 \bn3
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en3
 
 
 \noindent
 Here is a demo of the environment 'Code':
 \bn4
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en4
 
 
 \noindent
 Here is a demo of the environment 'CodeLineNo':
 \bn5
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en5
 
 
 \noindent
 Here is a demo of the environment 'CodeIndented':
 \bn6
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en6
 
 
 \noindent
 Here is a demo of the environment 'CodeIndented10':
 \bn7
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en7
 
 
 \noindent
 Here is a demo of the environment 'PyHighlight':
 \bn8
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en8
 
 
 \noindent
 Here is a demo of the environment 'CodeGrayWhite1':
 \bn9
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en9
 
 
 \noindent
 Here is a demo of the environment 'CodeGrayWhite2':
 \bn10
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en10
 
 
 \noindent
-Here is a demo of the environment 'Warnings':
+Here is a demo of the environment 'Minted\_Python':
 \bn11
-Some message can be written here as ordinary
-text.
+# Here is some Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
+
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en11
 
 
 \noindent
-Here is a demo of the environment 'Tip':
+Here is a demo of the environment 'Minted\_Cpp':
 \bn12
-Some message can be written here as ordinary
-text.
+# Here is some C++ code
+
+void height_and_velocity(double& y, double& v, 
+                         double t, double v0)
+{
+    /*
+    Invoke some advanced math computations.
+    */
+    double g = 9.81;               // acceleration of gravity
+    y = v0*t - 0.5*g*pow(t,2);     // vertical position
+    v = v0 - g*t;                  // vertical velocity
+}
+
+double initial_velocity = 0.5;
+double time = 0.6;
+double velocity, height;
+
+height_and_velocity(height, velocity, time, initial_velocity);
 \en12
 
-
 \noindent
-Here is a demo of the environment 'Note':
+Here is a demo of the environment 'Minted\_C':
 \bn13
-Some message can be written here as ordinary
-text.
+# Here is some C code
+
+double initial_velocity, time, velocity, height;
+
+void height_and_velocity(double* y, double* v, 
+                         double t, double v0)
+{
+    /*
+    Invoke some advanced math computations.
+    */
+    double g = 9.81;                /* acceleration of gravity */
+    *y = v0*t - 0.5*g*pow(t,2);     /* vertical position */
+    *v = v0 - g*t;                  /* vertical velocity */
+}
+
+height_and_velocity(&height, &velocity, 0.5, 0.143);
 \en13
 
-
 \noindent
-Here is a demo of the environment 'Blue':
+Here is a demo of the environment 'Minted\_Fortran':
 \bn14
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some Fortran 77 code
+
+       program ball
+       real*8 v0, time, v, h
+       v0 = 0.5
+       time = 0.6
+       call hgtvel(h, v, time, v0)
+
+       subroutine hgtvel(y, v, t, v0)
+       real*8 y, v, t, v0
+C      Invoke some advanced math computations.
+       real*8 g
+       g = 9.81
+C      height:
+       y = v0*t - 0.5*g*t**2
+C      velocity:
+       v = v0 - g*t
 \en14
 
-
 \noindent
-Here is a demo of the environment 'BlueFrame':
+Here is a demo of the environment 'Warnings':
 \bn15
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+Some message can be written here as ordinary
+text.
 \en15
 
 
 \noindent
-Here is a demo of the environment 'BlueBar':
+Here is a demo of the environment 'Tip':
 \bn16
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+Some message can be written here as ordinary
+text.
 \en16
 
 
 \noindent
-Here is a demo of the environment 'Red':
+Here is a demo of the environment 'Note':
 \bn17
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+Some message can be written here as ordinary
+text.
 \en17
 
 
 \noindent
-Here is a demo of the environment 'RedFrame':
+Here is a demo of the environment 'Blue':
 \bn18
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en18
 
 
 \noindent
-Here is a demo of the environment 'RedBar':
+Here is a demo of the environment 'BlueFrame':
 \bn19
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en19
 
 
 \noindent
-Here is a demo of the environment 'Yellow':
+Here is a demo of the environment 'BlueBar':
 \bn20
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en20
 
 
 \noindent
-Here is a demo of the environment 'Gray':
+Here is a demo of the environment 'Red':
 \bn21
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en21
 
 
 \noindent
-Here is a demo of the environment 'Blue\_snippet':
+Here is a demo of the environment 'RedFrame':
 \bn22
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en22
 
 
 \noindent
-Here is a demo of the environment 'Blue\_singlepage':
+Here is a demo of the environment 'RedBar':
 \bn23
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en23
 
 
 \noindent
-Here is a demo of the environment 'Gray\_singlepage':
+Here is a demo of the environment 'Yellow':
 \bn24
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en24
 
 
 \noindent
-Here is a demo of the environment 'TiagoPy':
+Here is a demo of the environment 'Gray':
 \bn25
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en25
 
 
 \noindent
-Here is a demo of the environment 'TiagoCpp':
+Here is a demo of the environment 'Blue\_snippet':
 \bn26
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en26
 
 
 \noindent
-Here is a demo of the environment 'FEniCS':
+Here is a demo of the environment 'Blue\_singlepage':
 \bn27
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en27
 
 
 \noindent
-Here is a demo of the environment 'FEniCSsmall':
+Here is a demo of the environment 'Gray\_singlepage':
 \bn28
-v0 = 5                    # velocity
-g = 9.81                  # acceleration of gravity
-t = 0.6                   # time
-y = v0*t - 0.5*g*t**2     # vertical position
-print y
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en28
+
+
+\noindent
+Here is a demo of the environment 'TiagoPy':
+\bn29
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
+\en29
+
+
+\noindent
+Here is a demo of the environment 'TiagoCpp':
+\bn30
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
+\en30
+
+
+\noindent
+Here is a demo of the environment 'FEniCS':
+\bn31
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
+\en31
+
+
+\noindent
+Here is a demo of the environment 'FEniCSsmall':
+\bn32
+# Here is some short Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+print height_and_velocity(initial_velocity=0.5, time=1)
+\en32
+
 
 
 \section{Support}
