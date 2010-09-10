@@ -143,7 +143,6 @@ class _Ptex2tex:
             if argv[i].startswith('-D'):
                 define = argv[i][2:]
                 self.preprocess_defines[define] = True
-                del argv[i]
 
         if 'undefines' in self.preprocess:
             s = self.preprocess['undefines']
@@ -161,7 +160,6 @@ class _Ptex2tex:
             if argv[i].startswith('-U'):
                 define = argv[i][2:]
                 del self.preprocess_defines[define]
-                del argv[i]
 
         if 'includes' in self.preprocess:
             s = self.preprocess['includes']
@@ -198,7 +196,7 @@ class _Ptex2tex:
     def preprocessor(self):
         """Run the preprocessor command on the file (if available)."""
         if not os.path.isfile(self.ptexfile):
-            print "file not found"
+            print "file %s not found" % self.ptexfile
             sys.exit(2)
         try:
             import preprocess

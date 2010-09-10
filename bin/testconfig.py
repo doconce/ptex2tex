@@ -12,7 +12,7 @@ The script is useful for testing everything that is defined in a
 snippets = {
 'smallpy': r'''
 \noindent
-Here is a demo of the environment '%s':
+Here is a demo of the environment \code{%s}:
 \bn%d
 # Here is some short Python code
 
@@ -30,7 +30,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 'Python': r'''
 \noindent
-Here is a demo of the environment '%s':
+Here is a demo of the environment \code{%s}:
 \bn%d
 # Here is some Python code
 
@@ -70,7 +70,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 'box': r"""
 \noindent
-Here is a demo of the environment '%s':
+Here is a demo of the environment \code{%s}:
 \bn%d
 Some message can be written here as ordinary
 text.
@@ -80,7 +80,7 @@ text.
 
 'Cpp': r"""
 \noindent
-Here is a demo of the environment '%s':
+Here is a demo of the environment \code{%s}:
 \bn%d
 # Here is some C++ code
 
@@ -105,7 +105,7 @@ height_and_velocity(height, velocity, time, initial_velocity);
 
 'C': r"""
 \noindent
-Here is a demo of the environment '%s':
+Here is a demo of the environment \code{%s}:
 \bn%d
 # Here is some C code
 
@@ -128,7 +128,7 @@ height_and_velocity(&height, &velocity, 0.5, 0.143);
 
 'Fortran': r"""
 \noindent
-Here is a demo of the environment '%s':
+Here is a demo of the environment \code{%s}:
 \bn%d
 C Here is some Fortran 77 code
 
@@ -182,7 +182,7 @@ for i in range(1, index):
     else:
         code = snippets['Python']
         
-    latex.write(code % (envir.replace('_', '\\_'), i, i))
+    latex.write(code % (envir, i, i))
 
 latex.close()
 print """\
