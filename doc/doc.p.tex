@@ -23,8 +23,8 @@ of hiding complicated \LaTeX{} constructions in complex \LaTeX{}
 packages, one simply generates the necessary \LaTeX{} commands on the
 fly, from a compact begin-end environment indication in the \LaTeX{}
 source.
-This implies that you have to preprocess your LaTeX source
-to make an ordinary LaTeX file that can be compiled in the usual way.
+This implies that you have to preprocess your \LaTeX{} source
+to make an ordinary {\LaTeX} file that can be compiled in the usual way.
 
 The main application of Ptex2tex is for inserting verbatim-style
 computer code in \LaTeX{} documents.  The main application of Ptex2tex
@@ -32,7 +32,7 @@ is for inserting verbatim-style computer code in \LaTeX{}
 documents. Code can be copied directly from the source files of the
 software (complete files or just snippets), and output from programs
 can be created and copied into the documentation as a part of running
-Ptex2tex.  This guarantees that your LaTeX document contains the most
+Ptex2tex.  This guarantees that your {\LaTeX} document contains the most
 recent version of the program code and its output!
 
 
@@ -467,7 +467,16 @@ section. Also, if we want to change the environment to be used, say for
 instance from 'pro' to 'sys', instead of changing up to several lines of
 \LaTeX~code, we simply change the keywords from  \code{\}\code{bpro} and
 \code{\}\code{epro} to \code{\}\code{bsys} and \code{\}\code{esys}.
-This step results in a \code{.tex} file that can be compiled with \LaTeX. In
+This step results in a \code{.tex} file that can be compiled with \LaTeX,
+provided one applies the \code{-shell-escape} option to \code{latex}:
+!bsys
+Unix/DOS> latex -shell-espace myfile.tex
+!esys
+The reason for requiring this option is that the resulting \code{.tex}
+file includes \code{minted.sty}, which assumes the the Pygments program
+is run, and this program cannot be run without the \code{-shell-escape}
+option.
+In
 the next section we show more of the details behind the environment keys.
 
 \subsection{The configuration file}\label{sec:conffile}
