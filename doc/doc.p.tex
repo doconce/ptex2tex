@@ -1,6 +1,6 @@
 %\documentclass[envcountsect]{lncse}
 \documentclass[a4paper,11pt]{article}
-\usepackage{ptex2tex}
+\usepackage{ptex2tex,minted}
 \usepackage{pythonhighlight}
 \begin{document}
 
@@ -467,17 +467,23 @@ section. Also, if we want to change the environment to be used, say for
 instance from 'pro' to 'sys', instead of changing up to several lines of
 \LaTeX~code, we simply change the keywords from  \code{\}\code{bpro} and
 \code{\}\code{epro} to \code{\}\code{bsys} and \code{\}\code{esys}.
-This step results in a \code{.tex} file that can be compiled with \LaTeX,
-provided one applies the \code{-shell-escape} option to \code{latex}:
+This step results in a \code{.tex} file that can be compiled with \LaTeX.
+Normally, this is done in the usual way:
+!bsys
+Unix/DOS> latex myfile.tex
+!esys
+However, if the \emp{minted} \LaTeX{} package is included (needed for the
+\code{Minted_*} environments in the default \emp{.ptex2tex.cfg}
+configuration file), one needs to apply
+the \code{-shell-escape} option to \code{latex}:
 !bsys
 Unix/DOS> latex -shell-espace myfile.tex
 !esys
-The reason for requiring this option is that the resulting \code{.tex}
-file includes \code{minted.sty}, which assumes the the Pygments program
-is run, and this program cannot be run without the \code{-shell-escape}
-option.
-In
-the next section we show more of the details behind the environment keys.
+The Pygments program when \code{minted.sty} is included, and this
+program cannot be invoked without the \code{-shell-escape} option.  In
+the next section we show more of the details behind the environment
+keys. Note that the \emp{minted} package must be explicitly
+included in a \emp{usepackage} statement by the writer of the Ptex2tex file.
 
 \subsection{The configuration file}\label{sec:conffile}
 As mentioned earlier, the idea of Ptex2tex is to allow the user to write short keywords for
@@ -709,10 +715,14 @@ packages are installed on your system (many of the stylefiles are found
 in the \code{latex/styles} directory of the Ptex2tex source):
 \bdat
 \usepackage{relsize,fancyvrb,moreverb,epsfig,framed}
-\usepackage{color,listings,pythonhighlight,minted}
+\usepackage{color,listings,pythonhighlight}
+%\usepackge{minted}
 \edat
-The \emp{minted} package also requires the Python tool \emp{pygments}
-to be installed.
+The \emp{minted} package requires the Python tool \emp{pygments}
+to be installed and \emp{latex} to be run with the extra option
+\emp{-shell-escape}. Therefore the \emp{minted} package is optional.
+It is only demanded for the \code{Minted_*} environments in the default
+\emp{.ptex2tex.cfg} configuration file.
 
 The Ptex2tex package comes with a \LaTeX~style file
 \code{ptex2tex.sty} containing the above 
@@ -723,6 +733,12 @@ so that \LaTeX~can find it, one can simply use
 \bdat
 \usepackage{ptex2tex}
 \edat
+or
+\bdat
+\usepackage{ptex2tex,minted}
+\edat
+if the \code{Minted_*} environments are desired for typesetting code.
+
 One can also just
 copy the \code{ptex2tex.sty} 
 file to the current working directory. This file, as well as the
