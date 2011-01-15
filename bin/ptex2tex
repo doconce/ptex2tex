@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 """Executable script associated with ptex2tex module."""
 import sys, os
-if len(sys.argv) < 2:
-    print 'ptex2tex [-v | -Dvar -Uvar] file'
+if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
+    print 'ptex2tex [-v -Dvar -Uvar -I dir1 -I dir2 --substitute -s ] file'
     print '-D and -U turn on or off preprocessor variables (can be many)'
     print '-v denotes verbose mode'
+    print '-I specifies directories for include statements'
     print 'file is given as basename, or with the .p.tex extension'
-    print 'other options are given in the config file'
+    print 'other options are given in the config file .ptex2tex.cfg'
     sys.exit(1)
 
 import ptex2tex

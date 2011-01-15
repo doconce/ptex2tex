@@ -132,6 +132,7 @@ class _Ptex2tex:
         #import pprint; pprint.pprint(self.supported)
         self.preprocess = self.supported.pop('preprocess')
         self.preprocess_defines = {}
+        self.preprocess_substitute = False
         if 'defines' in self.preprocess:
             s = self.preprocess['defines']
             for define in s.split(','):
@@ -143,6 +144,8 @@ class _Ptex2tex:
             if argv[i].startswith('-D'):
                 define = argv[i][2:]
                 self.preprocess_defines[define] = True
+            if argv[i] in ('-s', '--substitute'):
+                self.preprocess_substitute = True
 
         if 'undefines' in self.preprocess:
             s = self.preprocess['undefines']
@@ -167,6 +170,10 @@ class _Ptex2tex:
             self.preprocess_includes = eval(s)
         else:
             self.preprocess_includes = []
+            # -I dir options to preprocess
+            for i in range(len(argv)-1):
+                if argv[i] == '-I':
+                    self.preprocess_includes.append(argv[i+1])
             
         # [inline_code] section has the font item for \code and \emp commands:
         self.inline_code = self.supported.pop('inline_code')
@@ -213,6 +220,7 @@ class _Ptex2tex:
         preprocess.preprocess(self.ptexfile, self.preoutfile,
                               defines=self.preprocess_defines,
                               includePath=self.preprocess_includes,
+                              substitute=self.preprocess_substitute,
                               force=1)
         print "done"
 
