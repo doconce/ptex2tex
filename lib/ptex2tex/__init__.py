@@ -236,15 +236,27 @@ class _Ptex2tex:
             fontsize = int(self.inline_code['font'])
             lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\texttt{\1}}' % (fontsize, fontsize), lines)
 
-        # \code{} commands: replace with \verb!..! and font adjustment
-        pattern = re.compile(r'\\code\{(.*?)\\_\\_(.*?)\\_\\_(.*?)\}')#, re.DOTALL)
+        # several \code{} commands: replace with \verb!..! and font adjustment
+        # first, remove backslashes (if present - these are never necessary)
+        pattern = re.compile(r'\\code\{(.*?)\\_\\_(.*?)\\_\\_(.*?)\}') #, re.DOTALL) # re.DOTALL is problematic because verb!...! cannot have newline
         lines = re.sub(pattern, r'\code{\1__\2__\3}', lines)
         no_of_backslashes = 5
         for i in range(no_of_backslashes):
             # Handle up to no_of_backslashes in backslash constructions           
-            pattern = re.compile(r'\\code\{(.*?)\\([_#%$@])(.*?)\}')#, re.DOTALL)
+            pattern = re.compile(r'\\code\{(.*?)\\([_#%$@])(.*?)\}', re.DOTALL)
             lines = re.sub(pattern, r'\code{\1\2\3}', lines)
-        pattern = re.compile(r'\\code\{(.*?)\}')  #, re.DOTALL)
+        # remove one newline (two implies far too long inline verbatim
+        pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
+        lines = re.sub(pattern, r'\code{\1\2}', lines)
+        pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
+        m = pattern.search(lines)
+        if m:
+            print r'\code{%s\n%s}' % (m.group(1), m.group(2)), \
+                  'contains newline - remove it!'
+            sys.exit(1)
+        
+        # now all \code{} are without backslashes and newline
+        pattern = re.compile(r'\\code\{(.*?)\}', re.DOTALL)
         if self.inline_code['font'] == 'smaller':
             lines = re.sub(pattern, r'{\smaller\\verb!\1!\larger{}}', lines)
         else:
