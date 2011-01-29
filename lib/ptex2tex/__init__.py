@@ -237,14 +237,17 @@ class _Ptex2tex:
             lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\texttt{\1}}' % (fontsize, fontsize), lines)
 
         # several \code{} commands: replace with \verb!..! and font adjustment
-        # first, remove backslashes (if present - these are never necessary)
+
+        # first, remove backslashes (if present - these are never necessary,
+        # and they should be removed from old documents)
         pattern = re.compile(r'\\code\{(.*?)\\_\\_(.*?)\\_\\_(.*?)\}') #, re.DOTALL) # re.DOTALL is problematic because verb!...! cannot have newline
         lines = re.sub(pattern, r'\code{\1__\2__\3}', lines)
         no_of_backslashes = 5
         for i in range(no_of_backslashes):
             # Handle up to no_of_backslashes in backslash constructions           
-            pattern = re.compile(r'\\code\{(.*?)\\([_#%$@])(.*?)\}', re.DOTALL)
+            pattern = re.compile(r'\\code\{([^}]*?)\\([_#%$@])(.*?)\}', re.DOTALL)
             lines = re.sub(pattern, r'\code{\1\2\3}', lines)
+
         # remove one newline (two implies far too long inline verbatim
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
         lines = re.sub(pattern, r'\code{\1\2}', lines)
@@ -252,7 +255,7 @@ class _Ptex2tex:
         m = pattern.search(lines)
         if m:
             print r'\code{%s\n%s}' % (m.group(1), m.group(2)), \
-                  'contains newline - remove it!'
+                  'contains newline - make a single line!'
             sys.exit(1)
         
         # now all \code{} are without backslashes and newline
