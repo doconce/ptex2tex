@@ -19,7 +19,7 @@ echo
 echo "Documentation in $file.pdf"
 
 # googlecode wiki:
-doconce2format gwiki brief.do.txt
+doconce format gwiki brief.do.txt
 
 
 

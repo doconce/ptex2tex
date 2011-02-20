@@ -240,7 +240,7 @@ class _Ptex2tex:
 
         # first, remove backslashes (if present - these are never necessary,
         # and they should be removed from old documents)
-        pattern = re.compile(r'\\code\{(.*?)\\_\\_(.*?)\\_\\_(.*?)\}') #, re.DOTALL) # re.DOTALL is problematic because verb!...! cannot have newline
+        pattern = re.compile(r'\\code\{([^}]*?)\\_\\_([^}]*?)\\_\\_(.*?)\}') #, re.DOTALL) # re.DOTALL is problematic because verb!...! cannot have newline
         lines = re.sub(pattern, r'\code{\1__\2__\3}', lines)
         no_of_backslashes = 5
         for i in range(no_of_backslashes):
