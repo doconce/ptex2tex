@@ -3,7 +3,7 @@ Installing ptex2tex
 
 Installing latexslides is done by
 
-  python setup.py install
+python setup.py install
 
 with the usual Distutils options available.
 
