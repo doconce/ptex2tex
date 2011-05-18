@@ -260,7 +260,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Minted_Python}:
+Here is a demo of the environment \code{CppHighlight}:
 \bn9
 # Here is some Python code
 
@@ -298,737 +298,153 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Minted_Cpp}:
+Here is a demo of the environment \code{PyMatlab}:
 \bn10
-# Here is some C++ code
+# Here is some Python code
 
-void height_and_velocity(double& y, double& v, 
-                         double t, double v0)
-{
-    /*
-    Invoke some advanced math computations.
-    */
-    double g = 9.81;               // acceleration of gravity
-    y = v0*t - 0.5*g*pow(t,2);     // vertical position
-    v = v0 - g*t;                  // vertical velocity
-}
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
 
-double initial_velocity = 0.5;
-double time = 0.6;
-double velocity, height;
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
 
-height_and_velocity(height, velocity, time, initial_velocity);
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en10
 
+
 \noindent
-Here is a demo of the environment \code{Minted_C}:
+Here is a demo of the environment \code{PyBash}:
 \bn11
-# Here is some C code
+# Here is some Python code
 
-double initial_velocity, time, velocity, height;
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
 
-void height_and_velocity(double* y, double* v, 
-                         double t, double v0)
-{
-    /*
-    Invoke some advanced math computations.
-    */
-    double g = 9.81;                /* acceleration of gravity */
-    *y = v0*t - 0.5*g*pow(t,2);     /* vertical position */
-    *v = v0 - g*t;                  /* vertical velocity */
-}
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
 
-height_and_velocity(&height, &velocity, 0.5, 0.143);
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en11
 
+
 \noindent
-Here is a demo of the environment \code{Minted_Fortran}:
+Here is a demo of the environment \code{PySWIG}:
 \bn12
-C Here is some Fortran 77 code
+# Here is some Python code
 
-       program ball
-       real*8 v0, time, v, h
-       v0 = 0.5
-       time = 0.6
-       call hgtvel(h, v, time, v0)
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
 
-       subroutine hgtvel(y, v, t, v0)
-       real*8 y, v, t, v0
-C      Invoke some advanced math computations
-       real*8 g
-       g = 9.81
-C      height:
-       y = v0*t - 0.5*g*t**2
-C      velocity:
-       v = v0 - g*t
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
+
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en12
 
+
 \noindent
-Here is a demo of the environment \code{Warnings}:
+Here is a demo of the environment \code{Minted_Python}:
 \bn13
-Some message can be written here as ordinary
-text.
+# Here is some Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
+
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en13
-
-
-\noindent
-Here is a demo of the environment \code{Tip}:
-\bn14
-Some message can be written here as ordinary
-text.
-\en14
-
-
-\noindent
-Here is a demo of the environment \code{Note}:
-\bn15
-Some message can be written here as ordinary
-text.
-\en15
-
-
-\noindent
-Here is a demo of the environment \code{Blue}:
-\bn16
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en16
-
-
-\noindent
-Here is a demo of the environment \code{BlueFrame}:
-\bn17
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en17
-
-
-\noindent
-Here is a demo of the environment \code{BlueBar}:
-\bn18
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en18
-
-
-\noindent
-Here is a demo of the environment \code{Red}:
-\bn19
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en19
-
-
-\noindent
-Here is a demo of the environment \code{RedFrame}:
-\bn20
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en20
-
-
-\noindent
-Here is a demo of the environment \code{RedBar}:
-\bn21
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en21
-
-
-\noindent
-Here is a demo of the environment \code{Yellow}:
-\bn22
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en22
-
-
-\noindent
-Here is a demo of the environment \code{Gray}:
-\bn23
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en23
-
-
-\noindent
-Here is a demo of the environment \code{Blue_snippet}:
-\bn24
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en24
-
-
-\noindent
-Here is a demo of the environment \code{Blue_singlepage}:
-\bn25
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en25
-
-
-\noindent
-Here is a demo of the environment \code{Gray_singlepage}:
-\bn26
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en26
-
-
-\noindent
-Here is a demo of the environment \code{TiagoPy}:
-\bn27
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en27
-
-
-\noindent
-Here is a demo of the environment \code{TiagoCpp}:
-\bn28
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en28
-
-
-\noindent
-Here is a demo of the environment \code{FEniCS}:
-\bn29
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en29
-
-
-\noindent
-Here is a demo of the environment \code{FEniCSsmall}:
-\bn30
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en30
-
-
-\noindent
-Here is a demo of the environment \code{CodeGrayWhite1}:
-\bn31
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en31
-
-
-\noindent
-Here is a demo of the environment \code{CodeGrayWhite2}:
-\bn32
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en32
 

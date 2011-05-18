@@ -1,7 +1,6 @@
 %\documentclass[envcountsect]{lncse}
 \documentclass[a4paper,11pt]{article}
 \usepackage{ptex2tex,minted}
-\usepackage{pythonhighlight}
 \begin{document}
 
 \title{Ptex2tex: Flexible Handling of Computer Code in \LaTeX{} Documents}
@@ -711,13 +710,18 @@ but this will result in a warning.
 Note that some of the environments present in the environment configuration
 file require certain \LaTeX~packages to be available. Specifically, you should
 use the following lines in the header and make sure the corresponding
-packages are installed on your system (many of the stylefiles are found
-in the \code{latex/styles} directory of the Ptex2tex source):
+packages are installed on your system: 
 \bdat
 \usepackage{relsize,fancyvrb,moreverb,epsfig,framed}
-\usepackage{color,listings,pythonhighlight}
+\usepackage{color,listings2,codehighlight}
 %\usepackge{minted}
 \edat
+Many of the stylefiles are found
+in the \code{latex/styles} directory of the Ptex2tex source. For example,
+\code{codehighlight.sty} and
+\code{listings2.sty} are only found here and must be copied to the
+right directory for \LaTeX~packages.
+
 The \emp{minted} package requires the Python tool \emp{pygments}
 to be installed and \emp{latex} to be run with the extra option
 \emp{-shell-escape}. Therefore the \emp{minted} package is optional.
