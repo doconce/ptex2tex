@@ -7,6 +7,8 @@ import sys, os, re, shutil, string, glob, commands
 from optparse import OptionParser
 import ptex2tex.envs as envs
 
+__version__ = "0.31"
+
 code_statement = "@@@CODE"
 data_statement = "@@@DATA"
 cmd_statement = "@@@CMD"
