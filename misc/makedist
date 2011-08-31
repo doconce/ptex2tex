@@ -1,0 +1,60 @@
+#!/bin/bash
+# This script creates a new release of ptex2tex
+
+# Make sure we have the current version
+echo '--- Synchronizing repository'
+sleep 1
+svn update
+svn commit
+
+# Update version numbers
+echo '--- Update version number in CHANGELOG'
+sleep 1
+emacs -nw CHANGELOG
+echo '--- Update version number in lib/ptex2tex/__init__.py'
+sleep 1
+emacs -nw lib/ptex2tex/__init__.py
+echo '--- Update version number in setup.py'
+sleep 1
+emacs -nw setup.py
+
+# Commit changes
+echo '--- Committing changes to repository'
+sleep 1
+svn commit
+
+# Get the version number
+VERSION=`python -c "import sys;sys.path.insert(0, 'lib');import ptex2tex;print ptex2tex.__version__"`
+echo "--- Version number is $VERSION"
+
+# Tag repository
+svn cp https://ptex2tex.googlecode.com/svn/trunk/ \
+    https://ptex2tex.googlecode.com/svn/tags/$VERSION/
+
+# Create archive
+echo "--- Creating release $VERSION of ptex2tex"
+mkdir -p dist
+cd dist
+rm -f ptex2tex-$VERSION.tar.gz
+rm -rf ptex2tex-$VERSION
+svn export https://ptex2tex.googlecode.com/svn/trunk ptex2tex-$VERSION
+GZIP=--best tar -cz --owner root --group root --mode a+rX -f \
+    ptex2tex-$VERSION.tar.gz ptex2tex-$VERSION
+cd ..
+
+# Create Windows installer
+rm -f dist/ptex2tex-$VERSION.win32.exe
+python setup.py bdist_wininst --plat-name win32
+
+# Upload files to googlecode
+echo '--- Uploading files to googlecode'
+googlecode_upload.py \
+    -s "ptex2tex $VERSION - Source version" \
+    -p ptex2tex dist/ptex2tex-$VERSION.tar.gz
+googlecode_upload.py \
+    -s "ptex2tex $VERSION - Windows Installer" \
+    -p ptex2tex dist/ptex2tex-$VERSION.win32.exe
+
+# Edit web pages
+echo '--- Edit web pages'
+firefox http://ptex2tex.googlecode.com
