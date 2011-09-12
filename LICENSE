@@ -54,7 +54,7 @@ latex/styles/minted.sty:
 
 latex/*.eps and latex/*.fig:
 
-  These figures are from the book Guide to NumPy by Travis
+  These figures are from the book "Guide to NumPy" by Travis
   E. Oliphant, which is released into the public domain. Both the book
   and the book source are available for download from
   http://www.tramy.us/.
