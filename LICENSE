@@ -61,4 +61,6 @@ latex/*.eps and latex/*.fig:
 
 latex/styles/pythonhighlight.sty:
 
-  FIXME: Waiting for response from Olivier Verdier.
+  Permission has been granted by the author Olivier Verdier
+  <olivier@maths.lth.se> to release this file together with Doconce
+  under the new BSD license.
