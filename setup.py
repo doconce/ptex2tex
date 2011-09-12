@@ -14,6 +14,10 @@ latex_dir = os.path.join('share', 'texmf', 'tex', 'latex', name)
 
 data_files = [(latex_dir, latex_files)]
 
+# Add man page
+data_files.append((os.path.join("share", "man", "man1"),
+                   [os.path.join("doc", "man", "man1", "ptex2tex.1.gz")]))
+
 out = setup(name=name,
             version="0.31",
             description="A filter for converting from .p.tex to .tex format",
