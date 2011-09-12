@@ -1,5 +1,6 @@
 #!/bin/bash
-# This script creates a new release of ptex2tex
+# This script creates a new release of ptex2tex.
+# It must be run in the top-level directory.
 
 # Make sure we have the current version
 echo '--- Synchronizing repository'
@@ -28,7 +29,8 @@ VERSION=`python -c "import sys;sys.path.insert(0, 'lib');import ptex2tex;print p
 echo "--- Version number is $VERSION"
 
 # Tag repository
-svn cp https://ptex2tex.googlecode.com/svn/trunk/ \
+svn cp -m "Tagging release $VERSION." \
+    https://ptex2tex.googlecode.com/svn/trunk/ \
     https://ptex2tex.googlecode.com/svn/tags/$VERSION/
 
 # Create archive
