@@ -19,7 +19,7 @@ data_files.append((os.path.join("share", "man", "man1"),
                    [os.path.join("doc", "man", "man1", "ptex2tex.1.gz")]))
 
 out = setup(name=name,
-            version="0.31",
+            version="0.4",
             description="A filter for converting from .p.tex to .tex format",
             author="Ilmar M. Wilbers",
             author_email="ilmarw@simula.no",
