@@ -6,7 +6,7 @@
 \title{Ptex2tex: Flexible Handling of Computer Code in \LaTeX{} Documents}
 \author{Ilmar Wilbers \and Hans Petter Langtangen}
 
-\date{Simula Research Laboratory\\ 
+\date{Simula Research Laboratory\\
 Email: \texttt{\{ilmarw,hpl\}@simula.no}\\
 \ \ \\
 \today}
@@ -84,7 +84,7 @@ import sys; print 'script name is', sys.argv[0]
 \emybox
 \edat
 The \LaTeX{} code corresponding to the \code{mybox} environment, i.e.,
-how the box should look like, can be defined in a configuration file. 
+how the box should look like, can be defined in a configuration file.
 It is then easy to work with boxes, typically contining computer code,
 in a large document and with Ptex2tex just use some environment names
 rather than the full, complicated \LaTeX{} surroundings.
@@ -92,7 +92,7 @@ That is,
 the
 Ptex2tex approach allows much less code, and makes it easier to concentrate on the contents
 of the document we are writing and not the \LaTeX~code necessary to create such
-a box. 
+a box.
 Suppose you want the box to have a completely different look:
 \bcod
 import sys; print 'script name is', sys.argv[0]
@@ -133,7 +133,7 @@ make any changes to the document itself at all!
 At this point you may think that definition of new
 \LaTeX{} environments, stylefiles and packages solves the problem
 outlined above. This is not always true, as we elaborate on in the
-``Motivation'' section below. Ptex2tex, which is built on 
+``Motivation'' section below. Ptex2tex, which is built on
 \LaTeX{} code generation, apperas to be a simpler
 and more powerful technology.
 
@@ -161,7 +161,7 @@ The output from running this function with a=2 and b=0 is:
 @@@CMD python division.py #0
 \line(1,0){374}\\
  \\
-This makes Ptex2tex a very convenient tool, particularly 
+This makes Ptex2tex a very convenient tool, particularly
 when writing large \LaTeX~documents about computer programming where
 one needs to include a lot of programs and code snippets.
 
@@ -186,7 +186,7 @@ easier. As Ptex2tex uses Python configuration files to define commands, one does
 know Python in order to extend and tailor Ptex2tex.
 
 \subsection{Structure of this tutorial}
-This tutorial is divided in four sections. Following the introduction is 
+This tutorial is divided in four sections. Following the introduction is
 section about running the \emp{ptex2tex} program and generating
 native \LaTeX{} code, followed by a section on including files
 and output from program execution. Finally, we will explain how the
@@ -273,7 +273,7 @@ A line \emph{starting} with this statement indicates that a file containing a pr
 (that is, computer code) is to be included in the document. If there is only
 one argument after the statement (the file name), the whole file is included. If a second
 argument is included, it is split with respect to the character
-\code{'@'}. If only an expression in front of this character is given, 
+\code{'@'}. If only an expression in front of this character is given,
 only the part of the file starting with that
 argument and ending with the end of the file is included. If an expression
 after the character is given as well, the part of the file starting with the
@@ -288,7 +288,7 @@ expressions before and after \code{'@'} are ignored.
 
 The searching in the file for start and stop expressions is done using the
 Python function \code{find} on strings. Hence, start/stop expressions are
-compared directly to the text in the file. 
+compared directly to the text in the file.
 % #define INCLUDE_CTEX 0
 % #ifdef INCLUDE_CTEX
 In the \code{ctex2tex} script,
@@ -316,7 +316,7 @@ statement provided with the \code{preprocessor} package. The latter allows us to
 include a file by \code{% #include FILE}, but does not embed the copied text
 in special \LaTeX~environments, that is, the whole file is included as is.
 
-We will exemplify this for the file \code{myprog.py}. 
+We will exemplify this for the file \code{myprog.py}.
 Let's look at the output of some different options:\\
 \code{'@@@CODE myprog.py'}
 includes the whole file:
@@ -357,7 +357,7 @@ document. Any whitespaces after the character are ignored. There are five possib
 called (the first word) and the full path is stripped
 \item
 \code{'4'} the command is included except for the name of the program being
-called (the first word) and the full path is not stripped. 
+called (the first word) and the full path is not stripped.
 \end{enumerate}
 For options \code{'1'} and \code{'3'} a simple regular expression search is used
 to allow statements like \code{'python code/myprog.py'}
@@ -526,7 +526,7 @@ local \code{.p.tex} files. At the same time, one can make changes to the
 global file, but these changes will only matter if the environment it concerns
 is not overwritten in the local environment files. One can thus add
 environments to the global file and they will be available when running Ptex2tex
-from any location. 
+from any location.
 
 The configuration file is made up of different sections, one for each
 environment and one for the mapping of environment keys to the
@@ -583,7 +583,7 @@ that the options \code{breplace} and \code{ereplace} are defined. Hence, for
 the environment 'Extra', the following lines should exist and be defined:
 \bplin
 [Extra]
-breplace = \begin{verbatim} 
+breplace = \begin{verbatim}
 erplace = \end{verbatim}
 \eplin
 In this case they define a simple \code{Verbatim} environment. \code{breplace}
@@ -598,11 +598,11 @@ ext = Extra
 Now, the keywords \code{\}\code{bext} and \code{\}\code{eext} will
 be replaced with the text defined in \code{breplace} and \code{ereplace}.
 
-We differ between two categories of environments in Ptex2tex: 
+We differ between two categories of environments in Ptex2tex:
 those that make use of the \code{\}\code{newenvironment} keywords in \LaTeX,
 and those who don't, but instead use other \LaTeX~
 commands like \code{\}\code{minipage} and different packages like
-\code{fancyverb} or \code{framed} as well as different box environments. 
+\code{fancyverb} or \code{framed} as well as different box environments.
 
 The problem with Ptex2tex environments that use \code{\}\code{newenvironment} is
 that \LaTeX~needs this environment to be defined, but not more than
@@ -613,7 +613,7 @@ is an empty string. When running Ptex2tex
 on multiple files, and then combining these files in a single document, this
 environment will be defined multiple times, once for every \code{.p.tex}
 document. Since we run Ptex2tex on one file at the time, Ptex2tex cannot know
-if a specific environment is defined earlier. 
+if a specific environment is defined earlier.
 
 In order to get around this
 limitation, we use \code{\}\code{renewenvironment} instead of
@@ -628,7 +628,7 @@ we have created a way around this. What it does is to create a command
 is no equivalent\\ (\code{\}\code{provideenvironment}) for environments, but
 since \code{\}\code{renewenvironment} simply checks if the name of the
 environment (\code{shadedquote}) is defined, not if it is defined as an
-environment, this works. 
+environment, this works.
 
 When defining new environments as described above, the name of the
 environment must be unique in the configuration file. For example,
@@ -639,10 +639,10 @@ It is also possible to use an environment that is
 defined elsewhere, say in third-party \LaTeX~package. One can then use the option
 \code{define}. If it is set to \code{False}, it is assumed that the
 \LaTeX~environment is defined externally, and Ptex2tex will not define
-this environment. 
+this environment.
 
 There are two types of boxes supported by the standard configuration
-file \emp{ptex2tex.cfg}. One kind (e.g., 'Blue') allows the text 
+file \emp{ptex2tex.cfg}. One kind (e.g., 'Blue') allows the text
 in the box to be split over pages, while the other kind (e.g., 'Blue\_sp')
 does not allow splitting, which often forces \LaTeX\ to move the box
 to the next space, leaving a lot of white space on the preceding page.
@@ -658,7 +658,7 @@ to the next space, leaving a lot of white space on the preceding page.
 %moved to the next page, leaving a lot of white space. In the case that the
 %text within the box exceeds one page, it will even disappear below the
 %bottom of the page. This is a known problem for those who have experience in
-%using \LaTeX. 
+%using \LaTeX.
 
 Please note that the names of the environments should not
 contain numbers, only letters. Naming an environment
@@ -710,7 +710,7 @@ but this will result in a warning.
 Note that some of the environments present in the environment configuration
 file require certain \LaTeX~packages to be available. Specifically, you should
 use the following lines in the header and make sure the corresponding
-packages are installed on your system: 
+packages are installed on your system:
 \bdat
 \usepackage{relsize,fancyvrb,moreverb,epsfig,framed}
 \usepackage{color,listings2,codehighlight}
@@ -729,7 +729,7 @@ It is only demanded for the \code{Minted_*} environments in the default
 \emp{.ptex2tex.cfg} configuration file.
 
 The Ptex2tex package comes with a \LaTeX~style file
-\code{ptex2tex.sty} containing the above 
+\code{ptex2tex.sty} containing the above
 \emp{usepackage} commands, plus some tweaks of
 packages.
 If the \code{ptex2tex.sty} file is installed correctly
@@ -744,7 +744,7 @@ or
 if the \code{Minted_*} environments are desired for typesetting code.
 
 One can also just
-copy the \code{ptex2tex.sty} 
+copy the \code{ptex2tex.sty}
 file to the current working directory. This file, as well as the
 \code{.eps} files used for the Ptex2tex environments 'Warnings',
 'Rules', and 'Summation', are located in the folder \code{latex} in the source
@@ -757,19 +757,19 @@ associated with beginning
 and ending Ptex2tex environments, there is another keyword available,
 namely \code{\}\code{code}. This keyword can be used anywhere in the text, as
 long as it is contained within a single line. This allows the use of any
-character, we can for instance write 
+character, we can for instance write
 \code{\}\code{code}\code{{}\code{@#_%}\verb!}! without \LaTeX~giving
 us any errors. The result is similar to the \code{\}\code{texttt}
 \LaTeX~command, but it has nicer typesetting of (for instance) underscores.
-The \emp{code} command is really just a slightly modified normal 
-inline verbatim construction where the font size can be controlled. 
+The \emp{code} command is really just a slightly modified normal
+inline verbatim construction where the font size can be controlled.
 Moreover,
 the escape character in \LaTeX, which is
-\code{\}, is removed in front of the characters 
+\code{\}, is removed in front of the characters
 \code{'\#'}, \code{'\%'}, \code{'\@'},
-\code{'\$'} and \code{'\_'}. 
+\code{'\$'} and \code{'\_'}.
 Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
-in the text for the rest of the line after the character 
+in the text for the rest of the line after the character
 \code{\%} being marked as a comment in most
 editors, which is confusing. Writing
 \code{\}\code{code{}\code{\$}\smaller\verb!}!\larger~results in the text for the rest
@@ -846,10 +846,11 @@ the environments. Below is such a \LaTeX{} demo.
 % demo created by inserting the tmp_latex file generated by ../bin/testconfig.py
 % first copy the latest .ptex2tex.cfg file:
 %   cp ../lib/ptex2tex/ptex2tex.cfg .ptex2tex.cfg
-% run 
+% run
 %   python../bin/testconfig.py
 % insert tmp_names at the end of .ptex2tex.cfg
-% insert tmp_latex in this file (done via preprocess now)
+% insert tmp_latex in this file (done via preprocess now, if tmp_latex
+% is renamed to envir_demo.tex)
 %
 % the make.sh script automates the steps
 

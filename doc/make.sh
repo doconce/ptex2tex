@@ -16,7 +16,7 @@ latex -shell-escape $file
 dvipdf $file
 mv -f doc.pdf ptex2tex_doc.pdf
 echo
-echo "Documentation in $file.pdf"
+echo "Documentation in ptex2tex_$file.pdf"
 
 # googlecode wiki:
 doconce format gwiki brief.do.txt
