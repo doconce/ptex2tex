@@ -18,7 +18,7 @@ a part of running Ptex2tex. This guarantees that your LaTeX document
 contains the most recent version of the program code and its output!
 
 With the default Ptex2tex configuration style, you can switch between
-30+ styles for computer code within seconds and just recompile your
+almost 50 styles for computer code within seconds and just recompile your
 LaTeX files. Even in a several-hundred pages book it takes seconds to
 consistently change various styles for computer code, terminal sessions,
 output from programs, etc. This means that you never have to worry about
@@ -26,8 +26,7 @@ choosing a proper style for computer/verbatim code in your LaTeX
 document. Just use Ptex2tex and leave the decision to the future. It
 takes seconds to change your mind anyway.
 
-Read the
-https://ptex2tex.googlecode.com/svn/trunk/doc/ptex2tex_doc.pdf<ptex2tex manual>
+Read the "ptex2tex manual": "https://ptex2tex.googlecode.com/svn/trunk/doc/ptex2tex_doc.pdf"
 for further information and demos.
 
 ===== Required Software =====
@@ -36,7 +35,8 @@ Ptex2tex requires the following additional software:
 
  * http://code.google.com/p/preprocess<preprocess>
  * LaTeX packages: http://www.ctan.org/pkg/fancyvrb<fancyvrb>,
-   http://www.ctan.org/pkg/moreverb<moreverb>, pythonhighlights, minted
-   (see https://ptex2tex.googlecode.com/svn/trunk/latex/styles<styles>
-   in the ptex2tex tree, which include a corrected version of `minted.sty`
+   http://www.ctan.org/pkg/moreverb<moreverb>, anslistings, minted
+   (see "styles": "https://ptex2tex.googlecode.com/svn/trunk/latex/styles"
+   in the ptex2tex tree, which include `anslistings.sty` and a corrected
+   version of `minted.sty`)
  * http://pygments.org<pygments>
