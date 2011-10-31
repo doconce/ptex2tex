@@ -93,7 +93,7 @@ For now, the environment 'Verb' is used.
 
 class _Ptex2tex:
     __doc__ = doc()
-    
+
     def __init__(self, argv=sys.argv):
         """
         Command-line arguments:
@@ -112,15 +112,15 @@ class _Ptex2tex:
         elif len(os.path.splitext(self.file)[1]) > 0:
             print "extension %s is illegal," %os.path.splitext(self.file)[1],
             print "this script should only be called for .p.tex files"
-            sys.exit(1) 
+            sys.exit(1)
         self.ptexfile = self.file+".p.tex"
         self.preoutfile = self.file+".tmp1"
         self.transfile = self.file+".tmp2"
         self.texfile = self.file+".tex"
-        
+
         self.verbose = True if '-v' in argv else False
         # other command-line args are defined below
-                
+
         # Returns a dict where the keys are the names of the classes,
         # and the values are a tuple consisting of an instance of the class,
         # as well as the begin and end codes:
@@ -135,17 +135,31 @@ class _Ptex2tex:
         self.preprocess = self.supported.pop('preprocess')
         self.preprocess_defines = {}
         self.preprocess_substitute = False
+
+        # [preprocess]
+        # defines = myvar=1, yourvar=title, T1, V0
         if 'defines' in self.preprocess:
             s = self.preprocess['defines']
             for define in s.split(','):
                 define = define.strip()
                 if define:  # non-empty string
-                    self.preprocess_defines[define] = True
+                    if '=' in define:
+                        var, val = define.split('=')
+                        var = var.strip()
+                        val = val.strip()
+                    else:
+                        var, val = define, True
+                    self.preprocess_defines[var] = val
         # add defines from the command line:
+        # -Dmyvar=1 -Dyourvar=title -DT1 -DV0
         for i in range(len(argv)):
             if argv[i].startswith('-D'):
                 define = argv[i][2:]
-                self.preprocess_defines[define] = True
+                if '=' in define:
+                    var, val = define.split('=')
+                else:
+                    var, val = define, True
+                self.preprocess_defines[var] = val
             if argv[i] in ('-s', '--substitute'):
                 self.preprocess_substitute = True
 
@@ -176,7 +190,7 @@ class _Ptex2tex:
             for i in range(len(argv)-1):
                 if argv[i] == '-I':
                     self.preprocess_includes.append(argv[i+1])
-            
+
         # [inline_code] section has the font item for \code and \emp commands:
         self.inline_code = self.supported.pop('inline_code')
         if not 'font' in self.inline_code:
@@ -201,7 +215,7 @@ class _Ptex2tex:
         lines.reverse()
         stopline = len(lines) - stopline
         return '\n'.join(lines[startline:stopline]).strip('\n')
-        
+
     def preprocessor(self):
         """Run the preprocessor command on the file (if available)."""
         if not os.path.isfile(self.ptexfile):
@@ -246,7 +260,7 @@ class _Ptex2tex:
         lines = re.sub(pattern, r'\code{\1__\2__\3}', lines)
         no_of_backslashes = 5
         for i in range(no_of_backslashes):
-            # Handle up to no_of_backslashes in backslash constructions           
+            # Handle up to no_of_backslashes in backslash constructions
             pattern = re.compile(r'\\code\{([^}]*?)\\([_#%$@])(.*?)\}', re.DOTALL)
             lines = re.sub(pattern, r'\code{\1\2\3}', lines)
 
@@ -259,7 +273,7 @@ class _Ptex2tex:
             print r'\code{%s\n%s}' % (m.group(1), m.group(2)), \
                   'contains newline - make a single line!'
             sys.exit(1)
-        
+
         # now all \code{} are without backslashes and newline
         pattern = re.compile(r'\\code\{(.*?)\}', re.DOTALL)
         if self.inline_code['font'] == 'smaller':
@@ -267,7 +281,7 @@ class _Ptex2tex:
         else:
             fontsize = int(self.inline_code['font'])
             lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\verb!\1!}' % (fontsize, fontsize), lines)
-        
+
         open(self.preoutfile, 'w').write(lines)
 
     def include_file(self):
@@ -344,7 +358,7 @@ class _Ptex2tex:
                 else:
                     insstr = "(everything)"
                 print "copying in file %s %s..." %(codefilename, insstr),
-                
+
                 if startexp and not whole:
                     if code_found:
                         outfile.write(self.supported['sni'][1]+"\n")
@@ -370,7 +384,7 @@ class _Ptex2tex:
                     elif data_found:
                         outfile.write(self.supported['dat'][2]+"\n")
                 print "done"
-                    
+
             else:
                 outfile.write(line+"\n")
             code_found = False; data_found = False; whole = False
