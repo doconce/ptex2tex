@@ -35,15 +35,14 @@ Ptex2tex.  This guarantees that your {\LaTeX} document contains the most
 recent version of the program code and its output!
 
 
-With the default Ptex2tex
-configuration style, you can switch between 30+ styles for computer
-code within seconds and just recompile your \LaTeX{} files.
-Even in a several-hundred pages book it takes seconds to consistently
-change various styles for computer code, terminal sessions, output
-from programs, etc. This means that you never have to worry about
-choosing a proper style for computer/verbatim code in your \LaTeX{} document.
-Just use Ptex2tex and leave the decision to the future. It takes
-seconds to change your mind anyway.
+With the default Ptex2tex configuration style, you can switch between
+30+ styles for computer code within seconds and just recompile your
+\LaTeX{} files.  Even in a several-hundred pages book it takes seconds
+to consistently change various styles for computer code, terminal
+sessions, output from programs, etc. This means that you never have to
+worry about choosing a proper style for computer/verbatim code in your
+\LaTeX{} document.  Just use Ptex2tex and leave the decision to the
+future. It takes seconds to change your mind anyway.
 
 Let us look at an example.
 Say that you are writing a book or an article, and there
@@ -713,14 +712,23 @@ use the following lines in the header and make sure the corresponding
 packages are installed on your system:
 \bdat
 \usepackage{relsize,fancyvrb,moreverb,epsfig,framed}
-\usepackage{color,listings2,codehighlight}
+\usepackage{color,anslistings}
+\usepackage{minted}  % optional
 %\usepackge{minted}
 \edat
-Many of the stylefiles are found
+Some of the more uncommon style files are found
 in the \code{latex/styles} directory of the Ptex2tex source. For example,
-\code{codehighlight.sty} and
-\code{listings2.sty} are only found here and must be copied to the
+\code{minted.sty} and
+\code{anslistings.sty} are only found here and must be copied to the
 right directory for \LaTeX~packages.
+
+The script \code{latex/cp2texmf.sh} copies the necessary style files
+from the \emp{ptex2tex} source directory
+to the \emp{texmf} directory tree on Linux platforms.
+In addition to the files in the \emp{latex} directory and its
+subdirectories, one needs \emp{moreverb.sty}. On Debian systems,
+such as Ubuntu, all the other necessary style files are installed
+by \emp{sudo apt-get install livetex-latex-extra}.
 
 The \emp{minted} package requires the Python tool \emp{pygments}
 to be installed and \emp{latex} to be run with the extra option
@@ -743,13 +751,6 @@ or
 \edat
 if the \code{Minted_*} environments are desired for typesetting code.
 
-One can also just
-copy the \code{ptex2tex.sty}
-file to the current working directory. This file, as well as the
-\code{.eps} files used for the Ptex2tex environments 'Warnings',
-'Rules', and 'Summation', are located in the folder \code{latex} in the source
-code for Ptex2tex. The installation script for the package will try to
-install these to the computers' \LaTeX~folders, see the README file.
 
 \subsection{Additional keywords}
 In addition to the keywords starting with \code{@@@} and the keywords
