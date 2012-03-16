@@ -321,6 +321,8 @@ class _Ptex2tex:
                     regex[i] = regex[i].strip()
                 if self.verbose: print 'interpreted start-stop text:', regex
                 startexp = None
+                start = 0
+                stop = len(code)-1
                 whole = False
                 if len(regex[0]) > 0:
                     if len(regex) > 2:
@@ -359,9 +361,9 @@ class _Ptex2tex:
                         regex[0] = 'BOF'
                     insstr = 'from "%s" to "%s"' %(regex[0], regex[1])
                 elif startexp:
-                    insstr = "from %s to EOF" %regex[0]
+                    insstr = "from %s to end of file" %regex[0]
                 else:
-                    insstr = "(everything)"
+                    insstr = "everything"
                 print "copying %s,\n        in file %s, char %d-%d...." % (insstr, codefilename, start, stop),
                 if code.strip() == '':
                     print 'EMPTY REGION!'
