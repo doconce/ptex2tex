@@ -10,7 +10,9 @@ fi
 
 cp ptex2tex.sty styles/*.sty styles/with_license/*.sty note.eps note.fig warning.eps warning.fig tip.eps tip.fig $dir
 
-# update tex style files
+# Update tex style files
 cd $HOME/texmf
 mktexlsr .
 
+# More styles are needed (e.g., moreverb.sty)
+#sudo apt-get install texlive-latex-extra

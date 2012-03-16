@@ -26,11 +26,14 @@ should be quite simple:
 Location of LaTeX files
 =======================
 
-As part of ptex2tex, a style file (ptex2tex.sty) and several
+As part of ptex2tex, a style file (ptex2tex.sty) and some
 Encapsulated Postscript files (*.eps) are provided in the folder
 'latex'. When running the above installation command, the style files
-are written to 
+are written to
 os.path.join(sys.prefix, 'share', 'texmf', 'tex','latex', 'ptex2tex').
+It might happen that latex does not find these files. In that case,
+one can, on Linux systems, use the script 'latex/cp2texmf.sh' to
+copy the files to
 
 How latex will find the files when running is explained in the next
 section.

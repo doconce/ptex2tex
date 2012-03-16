@@ -270,8 +270,8 @@ class _Ptex2tex:
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
         m = pattern.search(lines)
         if m:
-            print r'\code{%s\n%s}' % (m.group(1), m.group(2)), \
-                  'contains newline - make a single line!'
+            print r'The following text contains the \code{} command with a newline - remove the newline(s):'
+            print r'\code{%s\n%s}' % (m.group(1), m.group(2))
             sys.exit(1)
 
         # now all \code{} are without backslashes and newline
@@ -295,28 +295,31 @@ class _Ptex2tex:
             shutil.copy(self.preoutfile, self.transfile)
             return
         outfile = open(self.transfile, 'w')
-        if self.verbose: print self.transfile
+        if self.verbose:
+            '\n\n*** Include text from file:'
+            print self.transfile
         lines = lines.splitlines()
-        if self.verbose: print lines
+        #if self.verbose: print lines
         for line in lines:
             code_found = line.startswith(self.code_statement)
             data_found = line.startswith(self.data_statement)
             if code_found or data_found:
                 codefilename = line.split()[1]
-                if self.verbose: print codefilename
-                try: codefile = open(codefilename)
+                if self.verbose: print 'will copy from', codefilename
+                try:
+                    codefile = open(codefilename, 'r')
                 except:
                      print "include file %s could not be found" %codefilename
                      sys.exit(2)
                 code = codefile.read()
                 codeline = string.join(line.split()[2:])
-                if self.verbose: print codeline
+                if self.verbose: print 'start-stop specification:', codeline
                 if codeline.find('@') < 0:
                     codeline += '@'
                 regex = codeline.split('@')
                 for i in range(len(regex)):
                     regex[i] = regex[i].strip()
-                if self.verbose: print regex
+                if self.verbose: print 'interpreted start-stop text:', regex
                 startexp = None
                 whole = False
                 if len(regex[0]) > 0:
@@ -329,7 +332,7 @@ class _Ptex2tex:
                         stopexp = stopexp.replace('~', ' ')
 		    else:
 			stopexp = ""
-                    if self.verbose: print startexp, stopexp
+                    if self.verbose: print 'final start-stop expressions:', [startexp, stopexp]
                     start = code.find(startexp)
                     while code[start-1] == ' ':
                         start -= 1
@@ -344,11 +347,13 @@ class _Ptex2tex:
                     if stop < 0:
                         print "stop expression not found for %s" %codefilename
                         sys.exit(3)
-                    if self.verbose: print start, stop
+                    if self.verbose: print 'copy from pos', start, 'to', stop
+                    if start > stop:
+                        print 'copying: start "%s" at char %d, end "%s" at char %d < %d - this is not what you intended - abort' % (startexp, start, stopexp, stop, start)
+                        sys.exit(1)
                     code = code[start:stop].rstrip()
                 if self.verbose:
-                    print "inserting the following text:"
-                    print code
+                    print "copying in the following text: [%s]" % code
                 if startexp and stopexp:
                     if start == 0:
                         regex[0] = 'BOF'
@@ -357,7 +362,10 @@ class _Ptex2tex:
                     insstr = "from %s to EOF" %regex[0]
                 else:
                     insstr = "(everything)"
-                print "copying in file %s %s..." %(codefilename, insstr),
+                print "copying %s,\n        in file %s, char %d-%d...." % (insstr, codefilename, start, stop),
+                if code.strip() == '':
+                    print 'EMPTY REGION!'
+                    sys.exit(1)
 
                 if startexp and not whole:
                     if code_found:

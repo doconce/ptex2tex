@@ -10,10 +10,15 @@ name = "ptex2tex"
 # The next line should probably have a Windows alternative:
 latex_dir = os.path.join('share', 'texmf', 'tex', 'latex', name)
 
-data_files = [(latex_dir, [os.path.join('latex', 'warning.eps'),
-                           os.path.join('latex', 'tip.eps'),
-                           os.path.join('latex', 'note.eps'),
-                           os.path.join('latex', 'ptex2tex.sty')]),
+data_files = [(latex_dir,
+               [os.path.join('latex', 'warning.eps'),
+                os.path.join('latex', 'tip.eps'),
+                os.path.join('latex', 'note.eps'),
+                os.path.join('latex', 'ptex2tex.sty'),
+                os.path.join('latex', 'styles', 'minted.sty'),
+                os.path.join('latex', 'styles', 'with_license',
+                             'anslistings.sty'),
+                           ]),
               (os.path.join("share", "man", "man1"),
                [os.path.join("doc", "man", "man1", "ptex2tex.1.gz")])]
 
