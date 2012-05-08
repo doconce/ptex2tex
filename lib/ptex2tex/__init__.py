@@ -196,6 +196,10 @@ class _Ptex2tex:
         if not 'font' in self.inline_code:
             print "missing option 'font' in inline code"
             sys.exit(5)
+        if 'verb_command' in self.inline_code:
+            self.verb_command = self.inline_code['verb_command']
+        else:
+            self.verb_command = 'verb'
 
 
     def strip(self, text):
@@ -253,6 +257,8 @@ class _Ptex2tex:
             lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\texttt{\1}}' % (fontsize, fontsize), lines)
 
         # several \code{} commands: replace with \verb!..! and font adjustment
+        # (i.e., \verb is actually \ + self.verb_command, and verb_command
+        # is set in the config file
 
         # first, remove backslashes (if present - these are never necessary,
         # and they should be removed from old documents)
@@ -277,10 +283,11 @@ class _Ptex2tex:
         # now all \code{} are without backslashes and newline
         pattern = re.compile(r'\\code\{(.*?)\}', re.DOTALL)
         if self.inline_code['font'] == 'smaller':
-            lines = re.sub(pattern, r'{\smaller\\verb!\1!\larger{}}', lines)
+            lines = re.sub(pattern, r'{\smaller\\%s!\1!\larger{}}' %
+                           self.verb_command, lines)
         else:
             fontsize = int(self.inline_code['font'])
-            lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\verb!\1!}' % (fontsize, fontsize), lines)
+            lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\%s!\1!}' % (fontsize, fontsize, self.verb_command), lines)
 
         open(self.preoutfile, 'w').write(lines)
 
