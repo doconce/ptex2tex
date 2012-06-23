@@ -7,21 +7,41 @@ Installing latexslides is done by
 
 with the usual Distutils options available.
 
+ptex2tex provides a flexible way of specifying various LaTeX
+environments for computer code. The specifications reside in a
+file .ptex2tex.cfg. You can have such a file in the same directory
+where your document is located, or you can (also) have your
+personal configuration file. The latter is installed by
+
+  cp lib/ptex2tex/ptex2tex.cfg ~/.ptex2tex.cfg
+
+The file we copy from in the command above is the default
+configuration file that comes with ptex2tex.
+
 The next sections are for those who know Distutils and LaTeX, and
 explains how to make LaTeX know about the style files that comes with
-ptex2tex. If this gets too complicated, there are two options that
+ptex2tex. If this gets too complicated, there are three options that
 should be quite simple:
 
-  1) copy the contents of the folder latex to the folder you are
+  1) If you are on a Linux system: cd latex; sh cp2texmf.sh
+     (this script installs LaTeX files for you and updates the system)
+
+or
+
+  2) copy the contents of the folder latex to the folder you are
      running ptex2tex from
 
-  2) add the folder latex to the environment variable TEXINPUTS, here
+or
+
+  3) add the folder latex to the environment variable TEXINPUTS, here
      demonstrated for the Bash shell:
 
-       export TEXINPUTS=:.:/path/to/style_files:$TEXINPUTS
+       export TEXINPUTS=:.:/users/name/ptex2tex/latex:$TEXINPUTS
 
      Note the first semi-colon; it ensures that the systemwide
-     directories are searched first.
+     directories are searched first. Also note that the sample
+     path /users/name/ptex2tex must be replaced by the full
+     path of the directory where your ptex2tex source resides.
 
 Location of LaTeX files
 =======================
@@ -72,10 +92,10 @@ setup.py should be set to this directory.
 Installation of additional software
 ===================================
 
-Ptex2tex requires the preprocess tool by Trent Mick, found at
+ptex2tex requires the preprocess tool by Trent Mick, found at
 http://code.google.com/p/preprocess/
 
-If the minted environments in the default Ptex2tex configuration file
+If the minted environments in the default ptex2tex configuration file
 are used, the pygments Python package must be installed:
 http://pygments.org/ (see also http://minted.googlecode.com).
 
@@ -113,8 +133,9 @@ Authors
 
 ptex2tex is based on a package called ctex2tex, developed by Hans
 Petter Langtangen. Ilmar Wilbers redesigned and reimplemented that
-package. New features were also added. Both authors work at Simula
-Research Laboratory in Norway, www.simula.no.
+package. New features were also added. Later, Langtangen has extended
+the package and is the primary maintainer. Langtangen works at
+Simula Research Laboratory in Norway and has email hpl@simula.no.
 
 License
 =======
