@@ -272,6 +272,7 @@ class _Ptex2tex:
 
         # remove one newline (two implies far too long inline verbatim
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
+        # (this pattern does not handle \code{...} with internal } AND \n!)
         lines = re.sub(pattern, r'\code{\1\2}', lines)
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
         m = pattern.search(lines)
@@ -285,11 +286,11 @@ class _Ptex2tex:
         # argument)
         pattern = re.compile(r'\\code\{(.*?)\}([ \n,.;:?)"])', re.DOTALL)
         if self.inline_code['font'] == 'smaller':
-            lines = re.sub(pattern, r'{\smaller\\%s!\1!\larger{}}\2' %
+            lines = pattern.sub(r'{\smaller\\%s!\1!\larger{}}\2' %
                            self.verb_command, lines)
         else:
             fontsize = int(self.inline_code['font'])
-            lines = re.sub(pattern, r'{\\fontsize{%spt}{%spt}\\%s!\1!}\2' % (fontsize, fontsize, self.verb_command), lines)
+            lines = pattern.sub(r'{\\fontsize{%spt}{%spt}\\%s!\1!}\2' % (fontsize, fontsize, self.verb_command), lines)
 
         open(self.preoutfile, 'w').write(lines)
 
