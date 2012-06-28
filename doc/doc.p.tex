@@ -443,10 +443,10 @@ please, and some are already defined by default.
 
 Let us have a closer look at the environment key 'pro'. For every environment
 key, two keywords can be used in the document we are working with. For 'pro'
-these would be \code{\}\code{bpro} to indicate where we want to start the
-typesetting for that environment, and the other is \code{\}\code{epro},
+these would be \code{\bpro} to indicate where we want to start the
+typesetting for that environment, and the other is \code{\epro},
 indicating the end. In general, for an environment key 'xxx' there will be
-keywords \code{\}\code{bxxx} and \code{\}\code{exxx} where 'b' and 'e' stand
+keywords \code{\bxxx} and \code{\exxx} where 'b' and 'e' stand
 for 'begin' and 'end', respectively. When Ptex2tex is scanning the
 documents, these two keywords are replaced with the actual \LaTeX~code that
 makes up the environment. Let us once again look at an example. The lines
@@ -463,8 +463,8 @@ The advantage is that we now can change the way this box should look like
 without making any changes in the document itself, as described in the next
 section. Also, if we want to change the environment to be used, say for
 instance from 'pro' to 'sys', instead of changing up to several lines of
-\LaTeX~code, we simply change the keywords from  \code{\}\code{bpro} and
-\code{\}\code{epro} to \code{\}\code{bsys} and \code{\}\code{esys}.
+\LaTeX~code, we simply change the keywords from  \code{\bpro} and
+\code{\epro} to \code{\bsys} and \code{\esys}.
 This step results in a \code{.tex} file that can be compiled with \LaTeX.
 Normally, this is done in the usual way:
 !bsys
@@ -488,12 +488,12 @@ As mentioned earlier, the idea of Ptex2tex is to allow the user to write short k
 parts of the document that are to be typeset in a special way. When running
 Ptex2tex, these keywords are then replaced with the full
 \LaTeX~commands, resulting in plain \code{.tex} files. For instance may the
-keyword \code{\}\code{bpy} be replaced with
+keyword \code{\bpy} be replaced with
 \bdat
 \plin
 \edat
 and
-\code{\}\code{epy} with
+\code{\epy} with
 \bdat
 \elin
 \edat
@@ -559,8 +559,8 @@ the environment 'Bluebox', we write:
 [names]
 pro = Bluebox
 \edat
-Hence we can use \code{\}\code{bpro} to indicate the
-beginning of the 'pro' environment, and \code{\}\code{epro} to indicate the end.
+Hence we can use \code{\bpro} to indicate the
+beginning of the 'pro' environment, and \code{\epro} to indicate the end.
 We can set multiple keys to point to the same environment:
 \bdat
 [names]
@@ -594,16 +594,16 @@ with this environment also need to be defined in the 'names' section:
 [names]
 ext = Extra
 \edat
-Now, the keywords \code{\}\code{bext} and \code{\}\code{eext} will
+Now, the keywords \code{\bext} and \code{\eext} will
 be replaced with the text defined in \code{breplace} and \code{ereplace}.
 
 We differ between two categories of environments in Ptex2tex:
-those that make use of the \code{\}\code{newenvironment} keywords in \LaTeX,
+those that make use of the \code{\newenvironment} keywords in \LaTeX,
 and those who don't, but instead use other \LaTeX~
-commands like \code{\}\code{minipage} and different packages like
+commands like \code{\minipage} and different packages like
 \code{fancyverb} or \code{framed} as well as different box environments.
 
-The problem with Ptex2tex environments that use \code{\}\code{newenvironment} is
+The problem with Ptex2tex environments that use \code{\newenvironment} is
 that \LaTeX~needs this environment to be defined, but not more than
 once, or it will issue an error. Therefore, when replacing the first occurrence of each environment
 keyword (for instance 'bpro'), a definition is added as well. This is the
@@ -615,8 +615,8 @@ document. Since we run Ptex2tex on one file at the time, Ptex2tex cannot know
 if a specific environment is defined earlier.
 
 In order to get around this
-limitation, we use \code{\}\code{renewenvironment} instead of
-\code{\}\code{newenvironment}. But since it is not possible to renew an
+limitation, we use \code{\renewenvironment} instead of
+\code{\newenvironment}. But since it is not possible to renew an
 environment unless it already is defined, this by itself does not solve the
 problem. But if we first add the line
 \bdat
@@ -624,8 +624,8 @@ problem. But if we first add the line
 \edat
 we have created a way around this. What it does is to create a command
 \code{shadedquote} given that \code{shadedquote} is not already defined. There
-is no equivalent\\ (\code{\}\code{provideenvironment}) for environments, but
-since \code{\}\code{renewenvironment} simply checks if the name of the
+is no equivalent\\ (\code{\provideenvironment}) for environments, but
+since \code{\renewenvironment} simply checks if the name of the
 environment (\code{shadedquote}) is defined, not if it is defined as an
 environment, this works.
 
@@ -648,7 +648,7 @@ to the next space, leaving a lot of white space on the preceding page.
 % outdated:
 %Currently the
 %Ptex2tex environments 'Program' and 'Data' use
-%\code{\}\code{renewenvironment}. The names of the \LaTeX~environments are
+%\code{\renewenvironment}. The names of the \LaTeX~environments are
 %\code{shadedquote} and \code{shadedquotedat}, respectively.
 %These two environments are also the only ones that support code spanning multiple
 %pages. This means that if the text between the beginning and ending keywords
@@ -661,8 +661,8 @@ to the next space, leaving a lot of white space on the preceding page.
 
 Please note that the names of the environments should not
 contain numbers, only letters. Naming an environment
-\code{\}\code{shadedquote2} makes the interpreter think that we are using
-\code{\}\code{shadedquote} followed by the number $2$.
+\code{\shadedquote2} makes the interpreter think that we are using
+\code{\shadedquote} followed by the number $2$.
 
 It is possible to use so-called variable interpolation in the configuration
 file. This means that one can use the name of one option in another option in
@@ -756,11 +756,14 @@ if the \code{Minted_*} environments are desired for typesetting code.
 In addition to the keywords starting with \code{@@@} and the keywords
 associated with beginning
 and ending Ptex2tex environments, there is another keyword available,
-namely \code{\}\code{code}. This keyword can be used anywhere in the text, as
+namely \code{\code}. This keyword can be used anywhere in the text, as
 long as it is contained within a single line. This allows the use of any
 character, we can for instance write
-\code{\}\code{code}\code{{}\code{@#_%}\verb!}! without \LaTeX~giving
-us any errors. The result is similar to the \code{\}\code{texttt}
+\bcod
+\code{}@#_%}
+\ecod
+without \LaTeX~giving
+us any errors. The result is similar to the \code{\texttt}
 \LaTeX~command, but it has nicer typesetting of (for instance) underscores.
 The \emp{code} command is really just a slightly modified normal
 inline verbatim construction where the font size can be controlled.
@@ -769,15 +772,16 @@ the escape character in \LaTeX, which is
 \code{\}, is removed in front of the characters
 \code{'\#'}, \code{'\%'}, \code{'\@'},
 \code{'\$'} and \code{'\_'}.
-Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
-in the text for the rest of the line after the character
-\code{\%} being marked as a comment in most
-editors, which is confusing. Writing
-\code{\}\code{code{}\code{\$}\smaller\verb!}!\larger~results in the text for the rest
-of the document being marked as a math environment. Using
-\code{\}\code{code{}\code{\}\code{\%}\smaller\verb!}!\larger~and
-\code{\}\code{code{}\code{\}\code{\$}\smaller\verb!}!\larger~instead gives us the same result
-in the final document without this problem appearing in our editor.
+
+%Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
+%in the text for the rest of the line after the character
+%\code{\%} being marked as a comment in most
+%editors, which is confusing. Writing
+%\code{\}\code{code{}\code{\$}\smaller\verb!}!\larger~results in the text for the rest
+%of the document being marked as a math environment. Using
+%\code{\}\code{code{}\code{\}\code{\%}\smaller\verb!}!\larger~and
+%\code{\}\code{code{}\code{\}\code{\$}\smaller\verb!}!\larger~instead gives us the same result
+%in the final document without this problem appearing in our editor.
 
 \subsection{Mapping of keywords to environments}
 The default mapping between Ptex2tex keywords and environments is included for

@@ -300,6 +300,41 @@ foreach $_(@files) {
 \en%d
 ''',
 
+'reST': r'''
+\noindent
+Here is a demo of the environment \code{%s}:
+\bn%d
+Headline
+========
+
+Some mathematics looks like
+
+.. math::
+
+        X' &=  c_{XY} Y + \cdots \\\
+        Y' &= -c_{XY} Y + \cdots
+
+The C++ code consists basically of the class ``ODESolver``
+declared in a file ``ext.h``::
+
+        class ODESolver {
+          int n;
+          double *S;
+          double *u;
+          double *u_prev;
+          double dt;
+
+          public:
+          ODESolver();
+          ~ODESolver();
+          ...
+        };
+
+.. figure:: figs/wait_and_see.png
+   :width: 600
+\en%d
+''',
+
 'Output': r'''
 \noindent
 Here is a demo of the environment \code{%s}:

@@ -222,7 +222,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{ANS_t_Python}:
+Here is a demo of the environment \code{Python_ANSt}:
 \bn8
 # Here is some Python code
 
@@ -260,7 +260,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{ANS_Python}:
+Here is a demo of the environment \code{Python_ANS}:
 \bn9
 # Here is some Python code
 
@@ -298,7 +298,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{ANS_t_Cpp}:
+Here is a demo of the environment \code{Cpp_ANSt}:
 \bn10
 # Here is some C++ code
 
@@ -321,7 +321,7 @@ height_and_velocity(height, velocity, time, initial_velocity);
 \en10
 
 \noindent
-Here is a demo of the environment \code{ANS_Cpp}:
+Here is a demo of the environment \code{Cpp_ANS}:
 \bn11
 # Here is some C++ code
 
@@ -344,7 +344,7 @@ height_and_velocity(height, velocity, time, initial_velocity);
 \en11
 
 \noindent
-Here is a demo of the environment \code{ANS_Matlab}:
+Here is a demo of the environment \code{Matlab_ANS}:
 \bn12
 function ball_volume_monte_carlo (dim_num, seed)
   n_log2_max = 24;
@@ -372,7 +372,7 @@ end
 \en12
 
 \noindent
-Here is a demo of the environment \code{ANS_t_Bash}:
+Here is a demo of the environment \code{Bash_ANSt}:
 \bn13
 #!/bin/bash
 files=$@
@@ -384,7 +384,7 @@ done
 \en13
 
 \noindent
-Here is a demo of the environment \code{ANS_Bash}:
+Here is a demo of the environment \code{Bash_ANS}:
 \bn14
 #!/bin/bash
 files=$@
@@ -396,7 +396,7 @@ done
 \en14
 
 \noindent
-Here is a demo of the environment \code{ANS_t_Swig}:
+Here is a demo of the environment \code{Swig_ANSt}:
 \bn15
 /* file: hw.i */
 %module hw
@@ -412,7 +412,7 @@ Here is a demo of the environment \code{ANS_t_Swig}:
 \en15
 
 \noindent
-Here is a demo of the environment \code{ANS_Swig}:
+Here is a demo of the environment \code{Swig_ANS}:
 \bn16
 /* file: hw.i */
 %module hw
@@ -428,7 +428,7 @@ Here is a demo of the environment \code{ANS_Swig}:
 \en16
 
 \noindent
-Here is a demo of the environment \code{ANS_t_gencode}:
+Here is a demo of the environment \code{gencode_ANSt}:
 \bn17
 static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
     double arg1, arg2, result;
@@ -442,7 +442,7 @@ static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
 \en17
 
 \noindent
-Here is a demo of the environment \code{ANS_gencode}:
+Here is a demo of the environment \code{gencode_ANS}:
 \bn18
 static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
     double arg1, arg2, result;
@@ -456,7 +456,7 @@ static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
 \en18
 
 \noindent
-Here is a demo of the environment \code{ANS_t_UFL}:
+Here is a demo of the environment \code{UFL_ANSt}:
 \bn19
 V = FunctionSpace(mesh, 'Lagrange', 3)
 u = TrialFunction(V)
@@ -467,7 +467,7 @@ L = f*dx
 \en19
 
 \noindent
-Here is a demo of the environment \code{ANS_UFL}:
+Here is a demo of the environment \code{UFL_ANS}:
 \bn20
 V = FunctionSpace(mesh, 'Lagrange', 3)
 u = TrialFunction(V)
@@ -478,7 +478,7 @@ L = f*dx
 \en20
 
 \noindent
-Here is a demo of the environment \code{ANS_t_Output}:
+Here is a demo of the environment \code{Output_ANSt}:
 \bn21
 i= 1:  0.916752431  1.234526111
 i= 2:  2.128967564  2.098176522
@@ -489,7 +489,7 @@ i= 6:  2.916777431  8.182726252
 \en21
 
 \noindent
-Here is a demo of the environment \code{ANS_Output}:
+Here is a demo of the environment \code{Output_ANS}:
 \bn22
 i= 1:  0.916752431  1.234526111
 i= 2:  2.128967564  2.098176522
@@ -538,46 +538,8 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{tiny_Minted_Python}:
-\bn24
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
-\en24
-
-
-\noindent
 Here is a demo of the environment \code{Minted_Cython}:
-\bn25
+\bn24
 # Here is some Cython code
 
 cpdef height_and_velocity(double t, double v0):
@@ -608,11 +570,11 @@ height_and_velocity = Wrapper(height_and_velocity,
       {'time': 't', 'velocity': 'v0', 'initial_velocity': 'v0'})
 
 print height_and_velocity(initial_velocity=0.5, time=1)
-\en25
+\en24
 
 \noindent
 Here is a demo of the environment \code{Minted_Cpp}:
-\bn26
+\bn25
 # Here is some C++ code
 
 void height_and_velocity(double& y, double& v,
@@ -631,11 +593,11 @@ double time = 0.6;
 double velocity, height;
 
 height_and_velocity(height, velocity, time, initial_velocity);
-\en26
+\en25
 
 \noindent
 Here is a demo of the environment \code{Minted_C}:
-\bn27
+\bn26
 # Here is some C code
 
 double initial_velocity, time, velocity, height;
@@ -652,11 +614,11 @@ void height_and_velocity(double* y, double* v,
 }
 
 height_and_velocity(&height, &velocity, 0.5, 0.143);
-\en27
+\en26
 
 \noindent
 Here is a demo of the environment \code{Minted_Fortran}:
-\bn28
+\bn27
 C Here is some Fortran 77 code
 
        program ball
@@ -674,11 +636,11 @@ C      height:
        y = v0*t - 0.5*g*t**2
 C      velocity:
        v = v0 - g*t
-\en28
+\en27
 
 \noindent
 Here is a demo of the environment \code{Minted_Matlab}:
-\bn29
+\bn28
 function ball_volume_monte_carlo (dim_num, seed)
   n_log2_max = 24;
 
@@ -702,11 +664,11 @@ function ball_volume_monte_carlo (dim_num, seed)
   end
   return
 end
-\en29
+\en28
 
 \noindent
 Here is a demo of the environment \code{Minted_Bash}:
-\bn30
+\bn29
 #!/bin/bash
 files=$@
 
@@ -714,11 +676,11 @@ for file in $files; do
   echo $file
   cp $file subdir
 done
-\en30
+\en29
 
 \noindent
 Here is a demo of the environment \code{Minted_Perl}:
-\bn31
+\bn30
 #!/usr/bin/perl
 die "Usage: $0 pattern file1 file2 ...\n" unless @ARGV >= 2;
 ($pattern, @files) = @ARGV;
@@ -733,6 +695,39 @@ foreach $_(@files) {
         close(FILE);
     }
 }
+\en30
+
+\noindent
+Here is a demo of the environment \code{Minted_reST}:
+\bn31
+Headline
+========
+
+Some mathematics looks like
+
+.. math::
+
+        X' &=  c_{XY} Y + \cdots \\\
+        Y' &= -c_{XY} Y + \cdots
+
+The C++ code consists basically of the class ``ODESolver``
+declared in a file ``ext.h``::
+
+        class ODESolver {
+          int n;
+          double *S;
+          double *u;
+          double *u_prev;
+          double dt;
+
+          public:
+          ODESolver();
+          ~ODESolver();
+          ...
+        };
+
+.. figure:: figs/wait_and_see.png
+   :width: 600
 \en31
 
 \noindent
