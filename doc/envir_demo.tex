@@ -344,8 +344,52 @@ height_and_velocity(height, velocity, time, initial_velocity);
 \en11
 
 \noindent
-Here is a demo of the environment \code{Matlab_ANS}:
+Here is a demo of the environment \code{Fortran_ANSt}:
 \bn12
+C Here is some Fortran 77 code
+
+       PROGRAM ball
+       real*8 v0, time, v, h
+       v0 = 0.5
+       time = 0.6
+       call hgtvel(h, v, time, v0)
+
+       SUBROUTINE hgtvel(y, v, t, v0)
+       real*8 y, v, t, v0
+C      Invoke some advanced math computations
+       real*8 g
+       g = 9.81
+C      height:
+       y = v0*t - 0.5*g*t**2
+C      velocity:
+       v = v0 - g*t
+\en12
+
+\noindent
+Here is a demo of the environment \code{Fortran_ANS}:
+\bn13
+C Here is some Fortran 77 code
+
+       PROGRAM ball
+       real*8 v0, time, v, h
+       v0 = 0.5
+       time = 0.6
+       call hgtvel(h, v, time, v0)
+
+       SUBROUTINE hgtvel(y, v, t, v0)
+       real*8 y, v, t, v0
+C      Invoke some advanced math computations
+       real*8 g
+       g = 9.81
+C      height:
+       y = v0*t - 0.5*g*t**2
+C      velocity:
+       v = v0 - g*t
+\en13
+
+\noindent
+Here is a demo of the environment \code{Matlab_ANS}:
+\bn14
 function ball_volume_monte_carlo (dim_num, seed)
   n_log2_max = 24;
 
@@ -369,51 +413,35 @@ function ball_volume_monte_carlo (dim_num, seed)
   end
   return
 end
-\en12
-
-\noindent
-Here is a demo of the environment \code{Bash_ANSt}:
-\bn13
-#!/bin/bash
-files=$@
-
-for file in $files; do
-  echo $file
-  cp $file subdir
-done
-\en13
-
-\noindent
-Here is a demo of the environment \code{Bash_ANS}:
-\bn14
-#!/bin/bash
-files=$@
-
-for file in $files; do
-  echo $file
-  cp $file subdir
-done
 \en14
 
 \noindent
-Here is a demo of the environment \code{Swig_ANSt}:
+Here is a demo of the environment \code{Bash_ANSt}:
 \bn15
-/* file: hw.i */
-%module hw
-%{
-/* include C++ header files necessary to compile the interface */
-#include "hw.h"
-%}
+#!/bin/bash
+files=$@
 
-%include "typemaps.i"
-%apply double *OUTPUT { double* s }
-%apply double *OUTPUT { double& s }
-%include "hw.h"
+for file in $files; do
+  echo $file
+  cp $file subdir
+done
 \en15
 
 \noindent
-Here is a demo of the environment \code{Swig_ANS}:
+Here is a demo of the environment \code{Bash_ANS}:
 \bn16
+#!/bin/bash
+files=$@
+
+for file in $files; do
+  echo $file
+  cp $file subdir
+done
+\en16
+
+\noindent
+Here is a demo of the environment \code{Swig_ANSt}:
+\bn17
 /* file: hw.i */
 %module hw
 %{
@@ -425,25 +453,27 @@ Here is a demo of the environment \code{Swig_ANS}:
 %apply double *OUTPUT { double* s }
 %apply double *OUTPUT { double& s }
 %include "hw.h"
-\en16
-
-\noindent
-Here is a demo of the environment \code{gencode_ANSt}:
-\bn17
-static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
-    double arg1, arg2, result;
-
-    if (!PyArg_ParseTuple(args, "dd:hw1", &arg1, &arg2)) {
-        return NULL;  /* wrong arguments provided */
-    }
-    result = hw1(arg1, arg2);
-    return Py_BuildValue("d", result);
-}
 \en17
 
 \noindent
-Here is a demo of the environment \code{gencode_ANS}:
+Here is a demo of the environment \code{Swig_ANS}:
 \bn18
+/* file: hw.i */
+%module hw
+%{
+/* include C++ header files necessary to compile the interface */
+#include "hw.h"
+%}
+
+%include "typemaps.i"
+%apply double *OUTPUT { double* s }
+%apply double *OUTPUT { double& s }
+%include "hw.h"
+\en18
+
+\noindent
+Here is a demo of the environment \code{gencode_ANSt}:
+\bn19
 static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
     double arg1, arg2, result;
 
@@ -453,55 +483,69 @@ static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
     result = hw1(arg1, arg2);
     return Py_BuildValue("d", result);
 }
-\en18
-
-\noindent
-Here is a demo of the environment \code{UFL_ANSt}:
-\bn19
-V = FunctionSpace(mesh, 'Lagrange', 3)
-u = TrialFunction(V)
-v = TestFunction(V)
-a = inner(nabla_grad(u), nabla_grad(v))*dx
-f = Constant(1)
-L = f*dx
 \en19
 
 \noindent
-Here is a demo of the environment \code{UFL_ANS}:
+Here is a demo of the environment \code{gencode_ANS}:
 \bn20
+static PyObject *_wrap_hw1(PyObject *self, PyObject *args) {
+    double arg1, arg2, result;
+
+    if (!PyArg_ParseTuple(args, "dd:hw1", &arg1, &arg2)) {
+        return NULL;  /* wrong arguments provided */
+    }
+    result = hw1(arg1, arg2);
+    return Py_BuildValue("d", result);
+}
+\en20
+
+\noindent
+Here is a demo of the environment \code{UFL_ANSt}:
+\bn21
 V = FunctionSpace(mesh, 'Lagrange', 3)
 u = TrialFunction(V)
 v = TestFunction(V)
 a = inner(nabla_grad(u), nabla_grad(v))*dx
 f = Constant(1)
 L = f*dx
-\en20
-
-\noindent
-Here is a demo of the environment \code{Output_ANSt}:
-\bn21
-i= 1:  0.916752431  1.234526111
-i= 2:  2.128967564  2.098176522
-i= 3:  4.987856451  0.121212220
-i= 4:  1.908716711  1.090896756
-i= 5:  2.129872431  2.217826712
-i= 6:  2.916777431  8.182726252
 \en21
 
 \noindent
-Here is a demo of the environment \code{Output_ANS}:
+Here is a demo of the environment \code{UFL_ANS}:
 \bn22
+V = FunctionSpace(mesh, 'Lagrange', 3)
+u = TrialFunction(V)
+v = TestFunction(V)
+a = inner(nabla_grad(u), nabla_grad(v))*dx
+f = Constant(1)
+L = f*dx
+\en22
+
+\noindent
+Here is a demo of the environment \code{Output_ANSt}:
+\bn23
 i= 1:  0.916752431  1.234526111
 i= 2:  2.128967564  2.098176522
 i= 3:  4.987856451  0.121212220
 i= 4:  1.908716711  1.090896756
 i= 5:  2.129872431  2.217826712
 i= 6:  2.916777431  8.182726252
-\en22
+\en23
+
+\noindent
+Here is a demo of the environment \code{Output_ANS}:
+\bn24
+i= 1:  0.916752431  1.234526111
+i= 2:  2.128967564  2.098176522
+i= 3:  4.987856451  0.121212220
+i= 4:  1.908716711  1.090896756
+i= 5:  2.129872431  2.217826712
+i= 6:  2.916777431  8.182726252
+\en24
 
 \noindent
 Here is a demo of the environment \code{Minted_Python}:
-\bn23
+\bn25
 # Here is some Python code
 
 def height_and_velocity(t, v0):
@@ -534,12 +578,12 @@ height_and_velocity = Wrapper(height_and_velocity,
                                'initial_velocity': 'v0'})
 
 print height_and_velocity(initial_velocity=0.5, time=1)
-\en23
+\en25
 
 
 \noindent
 Here is a demo of the environment \code{Minted_Cython}:
-\bn24
+\bn26
 # Here is some Cython code
 
 cpdef height_and_velocity(double t, double v0):
@@ -570,11 +614,11 @@ height_and_velocity = Wrapper(height_and_velocity,
       {'time': 't', 'velocity': 'v0', 'initial_velocity': 'v0'})
 
 print height_and_velocity(initial_velocity=0.5, time=1)
-\en24
+\en26
 
 \noindent
 Here is a demo of the environment \code{Minted_Cpp}:
-\bn25
+\bn27
 # Here is some C++ code
 
 void height_and_velocity(double& y, double& v,
@@ -593,11 +637,11 @@ double time = 0.6;
 double velocity, height;
 
 height_and_velocity(height, velocity, time, initial_velocity);
-\en25
+\en27
 
 \noindent
 Here is a demo of the environment \code{Minted_C}:
-\bn26
+\bn28
 # Here is some C code
 
 double initial_velocity, time, velocity, height;
@@ -614,20 +658,20 @@ void height_and_velocity(double* y, double* v,
 }
 
 height_and_velocity(&height, &velocity, 0.5, 0.143);
-\en26
+\en28
 
 \noindent
 Here is a demo of the environment \code{Minted_Fortran}:
-\bn27
+\bn29
 C Here is some Fortran 77 code
 
-       program ball
+       PROGRAM ball
        real*8 v0, time, v, h
        v0 = 0.5
        time = 0.6
        call hgtvel(h, v, time, v0)
 
-       subroutine hgtvel(y, v, t, v0)
+       SUBROUTINE hgtvel(y, v, t, v0)
        real*8 y, v, t, v0
 C      Invoke some advanced math computations
        real*8 g
@@ -636,11 +680,11 @@ C      height:
        y = v0*t - 0.5*g*t**2
 C      velocity:
        v = v0 - g*t
-\en27
+\en29
 
 \noindent
 Here is a demo of the environment \code{Minted_Matlab}:
-\bn28
+\bn30
 function ball_volume_monte_carlo (dim_num, seed)
   n_log2_max = 24;
 
@@ -664,11 +708,11 @@ function ball_volume_monte_carlo (dim_num, seed)
   end
   return
 end
-\en28
+\en30
 
 \noindent
 Here is a demo of the environment \code{Minted_Bash}:
-\bn29
+\bn31
 #!/bin/bash
 files=$@
 
@@ -676,11 +720,11 @@ for file in $files; do
   echo $file
   cp $file subdir
 done
-\en29
+\en31
 
 \noindent
 Here is a demo of the environment \code{Minted_Perl}:
-\bn30
+\bn32
 #!/usr/bin/perl
 die "Usage: $0 pattern file1 file2 ...\n" unless @ARGV >= 2;
 ($pattern, @files) = @ARGV;
@@ -695,11 +739,11 @@ foreach $_(@files) {
         close(FILE);
     }
 }
-\en30
+\en32
 
 \noindent
 Here is a demo of the environment \code{Minted_reST}:
-\bn31
+\bn33
 Headline
 ========
 
@@ -728,26 +772,10 @@ declared in a file ``ext.h``::
 
 .. figure:: figs/wait_and_see.png
    :width: 600
-\en31
+\en33
 
 \noindent
 Here is a demo of the environment \code{Warnings}:
-\bn32
-Some message can be written here as ordinary
-text.
-\en32
-
-
-\noindent
-Here is a demo of the environment \code{Tip}:
-\bn33
-Some message can be written here as ordinary
-text.
-\en33
-
-
-\noindent
-Here is a demo of the environment \code{Note}:
 \bn34
 Some message can be written here as ordinary
 text.
@@ -755,83 +783,23 @@ text.
 
 
 \noindent
-Here is a demo of the environment \code{Blue}:
+Here is a demo of the environment \code{Tip}:
 \bn35
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
+Some message can be written here as ordinary
+text.
 \en35
 
 
 \noindent
-Here is a demo of the environment \code{BlueFrame}:
+Here is a demo of the environment \code{Note}:
 \bn36
-# Here is some Python code
-
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
-
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
-
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
+Some message can be written here as ordinary
+text.
 \en36
 
 
 \noindent
-Here is a demo of the environment \code{BlueBar}:
+Here is a demo of the environment \code{Blue}:
 \bn37
 # Here is some Python code
 
@@ -869,7 +837,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Red}:
+Here is a demo of the environment \code{BlueFrame}:
 \bn38
 # Here is some Python code
 
@@ -907,7 +875,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{RedFrame}:
+Here is a demo of the environment \code{BlueBar}:
 \bn39
 # Here is some Python code
 
@@ -945,7 +913,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{RedBar}:
+Here is a demo of the environment \code{Red}:
 \bn40
 # Here is some Python code
 
@@ -983,7 +951,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Yellow}:
+Here is a demo of the environment \code{RedFrame}:
 \bn41
 # Here is some Python code
 
@@ -1021,7 +989,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Gray}:
+Here is a demo of the environment \code{RedBar}:
 \bn42
 # Here is some Python code
 
@@ -1059,7 +1027,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Blue_snippet}:
+Here is a demo of the environment \code{Yellow}:
 \bn43
 # Here is some Python code
 
@@ -1097,7 +1065,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Blue_singlepage}:
+Here is a demo of the environment \code{Gray}:
 \bn44
 # Here is some Python code
 
@@ -1135,7 +1103,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{Gray_singlepage}:
+Here is a demo of the environment \code{Blue_snippet}:
 \bn45
 # Here is some Python code
 
@@ -1173,7 +1141,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{PythonTiago}:
+Here is a demo of the environment \code{Blue_singlepage}:
 \bn46
 # Here is some Python code
 
@@ -1211,30 +1179,45 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{CppTiago}:
+Here is a demo of the environment \code{Gray_singlepage}:
 \bn47
-# Here is some C++ code
+# Here is some Python code
 
-void height_and_velocity(double& y, double& v,
-                         double t, double v0)
-{
-    /*
-    Invoke some advanced math computations.
-    */
-    double g = 9.81;               // acceleration of gravity
-    y = v0*t - 0.5*g*pow(t,2);     // vertical position
-    v = v0 - g*t;                  // vertical velocity
-}
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
 
-double initial_velocity = 0.5;
-double time = 0.6;
-double velocity, height;
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
 
-height_and_velocity(height, velocity, time, initial_velocity);
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
 \en47
 
+
 \noindent
-Here is a demo of the environment \code{oldFEniCS}:
+Here is a demo of the environment \code{PythonTiago}:
 \bn48
 # Here is some Python code
 
@@ -1272,45 +1255,30 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{oldFEniCSsmall}:
+Here is a demo of the environment \code{CppTiago}:
 \bn49
-# Here is some Python code
+# Here is some C++ code
 
-def height_and_velocity(t, v0):
-    """Invoke some advanced math computations."""
-    g = 9.81                  # acceleration of gravity
-    y = v0*t - 0.5*g*t**2     # vertical position
-    v = v0 - g*t              # vertical velocity
-    return y, v
+void height_and_velocity(double& y, double& v,
+                         double t, double v0)
+{
+    /*
+    Invoke some advanced math computations.
+    */
+    double g = 9.81;               // acceleration of gravity
+    y = v0*t - 0.5*g*pow(t,2);     // vertical position
+    v = v0 - g*t;                  // vertical velocity
+}
 
-class Wrapper:
-    def __init__(self, func, alternative_kwarg_names={}):
-        self.func = func
-        self.help = alternative_kwarg_names
+double initial_velocity = 0.5;
+double time = 0.6;
+double velocity, height;
 
-    def __call__(self, *args, **kwargs):
-        # Translate possible alternative keyword argument
-        # names in kwargs to those accepted by self.func:
-        func_kwargs = {}
-        for name in kwargs:
-            if name in self.help:
-                func_kwargs[self.help[name]] = kwargs[name]
-            else:
-                func_kwargs[name] = kwargs[name]
-
-        return self.func(*args, **func_kwargs)
-
-height_and_velocity = Wrapper(height_and_velocity,
-                              {'time': 't',
-                               'velocity': 'v0',
-                               'initial_velocity': 'v0'})
-
-print height_and_velocity(initial_velocity=0.5, time=1)
+height_and_velocity(height, velocity, time, initial_velocity);
 \en49
 
-
 \noindent
-Here is a demo of the environment \code{CodeGrayWhite1}:
+Here is a demo of the environment \code{oldFEniCS}:
 \bn50
 # Here is some Python code
 
@@ -1348,7 +1316,7 @@ print height_and_velocity(initial_velocity=0.5, time=1)
 
 
 \noindent
-Here is a demo of the environment \code{CodeGrayWhite2}:
+Here is a demo of the environment \code{oldFEniCSsmall}:
 \bn51
 # Here is some Python code
 
@@ -1383,4 +1351,80 @@ height_and_velocity = Wrapper(height_and_velocity,
 
 print height_and_velocity(initial_velocity=0.5, time=1)
 \en51
+
+
+\noindent
+Here is a demo of the environment \code{CodeGrayWhite1}:
+\bn52
+# Here is some Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
+
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
+\en52
+
+
+\noindent
+Here is a demo of the environment \code{CodeGrayWhite2}:
+\bn53
+# Here is some Python code
+
+def height_and_velocity(t, v0):
+    """Invoke some advanced math computations."""
+    g = 9.81                  # acceleration of gravity
+    y = v0*t - 0.5*g*t**2     # vertical position
+    v = v0 - g*t              # vertical velocity
+    return y, v
+
+class Wrapper:
+    def __init__(self, func, alternative_kwarg_names={}):
+        self.func = func
+        self.help = alternative_kwarg_names
+
+    def __call__(self, *args, **kwargs):
+        # Translate possible alternative keyword argument
+        # names in kwargs to those accepted by self.func:
+        func_kwargs = {}
+        for name in kwargs:
+            if name in self.help:
+                func_kwargs[self.help[name]] = kwargs[name]
+            else:
+                func_kwargs[name] = kwargs[name]
+
+        return self.func(*args, **func_kwargs)
+
+height_and_velocity = Wrapper(height_and_velocity,
+                              {'time': 't',
+                               'velocity': 'v0',
+                               'initial_velocity': 'v0'})
+
+print height_and_velocity(initial_velocity=0.5, time=1)
+\en53
 

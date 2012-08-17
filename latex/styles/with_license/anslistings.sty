@@ -13,7 +13,8 @@
 %% anycode    for generic code
 %% progoutput for program output
 %% gencode    for generated code
-%% latexcode  for latexcode
+%% latexcode  for LaTeX code
+%% fortran    for FORTRAN code
 %%
 %% This style file is based on original work by Olivier Verdier
 %% <olivier.verdier@math.ntnu.no> (pythonhighlight.sty),
@@ -24,7 +25,7 @@
 %% Modified by Hans Petter Langtangen <hpl@simula.no>, 2011, to
 %% have pairs c++ (with C++ title) and c++:nt (no title),
 %% python and python:nt, etc. (It is not always desirable to
-%% have a title with the language.) Added Cython style.
+%% have a title with the language.) Added Cython and Fortran style.
 %%
 %% First added:   2011-05-16
 %% Last modified: 2011-06-03
@@ -137,7 +138,7 @@ morestring=[d][stringstyle]'
 \lstnewenvironment{c++:nt}[1][]{\lstset{style=cppstyle}}{}
 \newcommand{\cpp}{\lstinline[style=cppstyle,basicstyle=\ttfamily]}
 
-%--- Typesetting Python and Cython ---
+%--- Python and Cython ---
 
  \lstdefinestyle{pythonstyle}{
  language=python,
@@ -202,13 +203,13 @@ morestring=[d][stringstyle]'
  alsoletter={1234567890},
  otherkeywords={\ , \}, \{, \%, \&, \|},
  keywordstyle=\color{keywordcolour}\bfseries,
- emph={and,break,class,continue,def,yield,del,elif ,else,%
+ emph={and,break,class,continue,def,cdef,cpdef,yield,del,elif ,else,%
  except,exec,finally,for,from,global,if,import,in,%
  lambda,not,or,pass,print,raise,return,try,while,assert,cdef,cpdef},
  emphstyle=\color{blue}\bfseries,
  emph={[2]True, False, None},
  emphstyle=[2]\color{keywordcolour},
- emph={[3]object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,len,dict,tuple,xrange,append,execfile,real,imag,reduce,str,repr,float,int,ndarray,complex},
+ emph={[3]object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,len,dict,tuple,xrange,append,execfile,real,imag,reduce,str,repr,float,int,ndarray,complex,double},
  emphstyle=[3]\color{commandcolour},
  emph={Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError},
  emphstyle=\color{exceptioncolour}\bfseries,
@@ -254,7 +255,51 @@ morestring=[d][stringstyle]'
 \lstnewenvironment{cython:nt}[1][]{\lstset{style=cythonstyle}}{}
 \newcommand{\cyth}{\lstinline[style=cythonstyle,basicstyle=\ttfamily]}
 
-%--- Typesetting XML ---
+%--- FORTRAN ---
+
+% Note: this is basically FORTRAN 77, not 90, 95, 2003/2008.
+\lstdefinestyle{fortranstyle}{
+language=fortran,
+style=c@mmon,
+stringstyle=\color{stringcolour},
+showstringspaces=false,
+alsoletter={1234567890},
+keywordstyle=\color{keywordcolour}\bfseries,
+emph={auto,do,while,if,else,end,endif,enddo,%
+subroutine,function,format,program},
+emphstyle=\color{blue}\bfseries,
+emphstyle=[2]\color{keywordcolour},
+emph={[3]double,real,precision,integer,logical},
+emphstyle=[3]\color{blue},
+emph={[4]1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
+emph={[4]cos,sin,tan,acos,asin,atan,atan2,cosh,sinh,tanh,%
+exp,frexp,ldexp,log,log10,modf,pow,sqrt,ceil,fabs,floor,fmod},
+emphstyle=[4]\color{numpycolour},
+literate=*%
+{:}{{\literatecolour:}}{1}%
+{=}{{\literatecolour=}}{1}%
+{-}{{\literatecolour-}}{1}%
+{+}{{\literatecolour+}}{1}%
+{*}{{\literatecolour*}}{1}%
+{!}{{\literatecolour!}}{1}%
+{[}{{\literatecolour[}}{1}%
+{]}{{\literatecolour]}}{1}%
+{<}{{\literatecolour<}}{1}%
+{>}{{\literatecolour>}}{1}%
+,%
+commentstyle=\color{commentcolour}\slshape,
+morecomment=[l][commentstyle]{C},  % need ! as well for F90
+morestring=[b][stringstyle]",
+morestring=[d][stringstyle]'
+}
+
+\newcommand{\inputfortran}[1]{\lstinputlisting[style=fortranstyle, title={\codetitlestyle{FORTRAN code}}, belowcaptionskip=\belowtitleskip]{#1}}
+\lstnewenvironment{fortran}[1][]{\lstset{style=fortranstyle, title={\codetitlestyle{FORTRAN code}}, belowcaptionskip=\belowtitleskip}}{}
+\lstnewenvironment{fortran:nt}[1][]{\lstset{style=fortranstyle}}{}
+\newcommand{\fortr}{\lstinline[style=fortranstyle,basicstyle=\ttfamily]}
+
+
+%--- XML ---
 
 \lstdefinestyle{xmlstyle}{
 language=xml,
@@ -323,6 +368,7 @@ backgroundcolor=\color{yellow!10}
 
 %--- MATLAB ---
 
+% Note: problem with too large width of frame
 \lstnewenvironment{matlab}[1][]{
 \lstset{
 language=matlab,

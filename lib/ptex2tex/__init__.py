@@ -284,7 +284,7 @@ class _Ptex2tex:
         # now all \code{} are without backslashes and newline
         # (note that we need the 2nd group to handle } inside the code
         # argument)
-        pattern = re.compile(r'\\code\{(.*?)\}([ \n,.;:?)"])', re.DOTALL)
+        pattern = re.compile(r"""\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
         if self.inline_code['font'] == 'smaller':
             lines = pattern.sub(r'{\smaller\\%s!\1!\larger{}}\2' %
                            self.verb_command, lines)

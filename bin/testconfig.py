@@ -133,13 +133,13 @@ Here is a demo of the environment \code{%s}:
 \bn%d
 C Here is some Fortran 77 code
 
-       program ball
+       PROGRAM ball
        real*8 v0, time, v, h
        v0 = 0.5
        time = 0.6
        call hgtvel(h, v, time, v0)
 
-       subroutine hgtvel(y, v, t, v0)
+       SUBROUTINE hgtvel(y, v, t, v0)
        real*8 y, v, t, v0
 C      Invoke some advanced math computations
        real*8 g
