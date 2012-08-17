@@ -273,7 +273,7 @@ class _Ptex2tex:
         # remove one newline (two implies far too long inline verbatim
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
         # (this pattern does not handle \code{...} with internal } AND \n!)
-        lines = re.sub(pattern, r'\code{\1\2}', lines)
+        lines = re.sub(pattern, r'\code{\1 \2}', lines)
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
         m = pattern.search(lines)
         if m:
