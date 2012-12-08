@@ -28,8 +28,8 @@ should be quite simple:
 
 or
 
-  2) copy the contents of the folder latex to the folder you are
-     running ptex2tex from
+  2) copy all the .sty files in the folder latex and its subfolders
+     to the folder you are running ptex2tex from
 
 or
 
@@ -38,7 +38,7 @@ or
 
        export TEXINPUTS=:.:/users/name/ptex2tex/latex:$TEXINPUTS
 
-     Note the first semi-colon; it ensures that the systemwide
+     Note the first semi-colon; it ensures that the system-wide
      directories are searched first. Also note that the sample
      path /users/name/ptex2tex must be replaced by the full
      path of the directory where your ptex2tex source resides.
@@ -53,7 +53,7 @@ are written to
 os.path.join(sys.prefix, 'share', 'texmf', 'tex','latex', 'ptex2tex').
 It might happen that latex does not find these files. In that case,
 one can, on Linux systems, use the script 'latex/cp2texmf.sh' to
-copy the files to
+copy the files to ~/texmf/tex/latex/misc.
 
 How latex will find the files when running is explained in the next
 section.
@@ -99,7 +99,7 @@ If the minted environments in the default ptex2tex configuration file
 are used, the pygments Python package must be installed:
 http://pygments.org/ (see also http://minted.googlecode.com).
 
-Several LaTeX styles are needed: fancyvrb, moreverb, pythonhighlights,
+Several LaTeX styles are needed: fancyvrb, moreverb,
 and minted. Some of these are included in the latex/styles
 subdirectory, while the others are available for download from
 http://www.ctan.org. Users on Debian based systems (like Ubuntu) can

@@ -2,7 +2,14 @@
 \usepackage{color,anslistings}
 %\usepackage{minted} % requires latex -shell-escape and pygments
 % minted is used for the Minted_Python, Minted_Cpp, etc. environments
-% include minted explicitly in the ptex2tex file: \usepackage{minted}
+% include minted explicitly in the ptex2tex file:
+%\usepackage{minted}
+%\usemintedstyle{default}
+% or
+% #ifdef MINTED
+%\usepackage{minted}
+%\usemintedstyle{default}
+% #endif
 
 % Tiago Quintino's adjustment of the listings package:
 \definecolor{darkgreen}{rgb}{0,0.45,0.08}

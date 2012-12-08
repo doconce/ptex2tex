@@ -8,7 +8,7 @@ if [ ! -d $dir ]; then
     mkdir -p $dir
 fi
 
-cp ptex2tex.sty styles/*.sty styles/with_license/*.sty note.eps note.fig warning.eps warning.fig tip.eps tip.fig $dir
+cp ptex2tex.sty styles/*.sty styles/with_license/*.sty *.eps *.pdf $dir
 
 # Update tex style files
 cd $HOME/texmf
