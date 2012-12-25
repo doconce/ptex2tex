@@ -773,6 +773,26 @@ the escape character in \LaTeX, which is
 \code{'\#'}, \code{'\%'}, \code{'\@'},
 \code{'\$'} and \code{'\_'}.
 
+The \code{code} command is translated to a \code{Verb} command
+(requiring the \code{fancyvrb} package). For example
+\bcod
+\code{my_func}
+\ecod
+becomes
+\bcod
+\Verb!my_func!
+\ecod
+The configuration file has an option \code{verb_command} that
+defines if \code{Verb} or the standard \code{verb} command is to
+be used:
+\bcod
+[inline_code]
+font = 10
+verb_command = Verb
+# or
+verb_command = verb
+\ecod
+
 %Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
 %in the text for the rest of the line after the character
 %\code{\%} being marked as a comment in most
