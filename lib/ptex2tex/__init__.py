@@ -11,7 +11,7 @@ __version__ = "0.5"
 
 code_statement = "@@@CODE"
 data_statement = "@@@DATA"
-cmd_statement = "@@@CMD"
+cmd_statement  = "@@@CMD"
 
 def doc():
     return """
@@ -199,7 +199,7 @@ class _Ptex2tex:
         if 'verb_command' in self.inline_code:
             self.verb_command = self.inline_code['verb_command']
         else:
-            self.verb_command = 'verb'
+            self.verb_command = 'Verb'  # default
 
 
     def strip(self, text):
