@@ -260,8 +260,11 @@ class _Ptex2tex:
         # (i.e., \verb is actually \ + self.verb_command, and verb_command
         # is set in the config file
 
+        # NO: \code{} inside captions, headings, tabular headings require
+        # \_ (that is why the code below is commented out)
         # first, remove backslashes (if present - these are never necessary,
         # and they should be removed from old documents)
+        """
         pattern = re.compile(r'\\code\{([^}]*?)\\_\\_([^}]*?)\\_\\_(.*?)\}') #, re.DOTALL) # re.DOTALL is problematic because verb!...! cannot have newline
         lines = re.sub(pattern, r'\code{\1__\2__\3}', lines)
         no_of_backslashes = 5
@@ -269,6 +272,7 @@ class _Ptex2tex:
             # Handle up to no_of_backslashes in backslash constructions
             pattern = re.compile(r'\\code\{([^}]*?)\\([_#%$@])(.*?)\}', re.DOTALL)
             lines = re.sub(pattern, r'\code{\1\2\3}', lines)
+        """
 
         # remove one newline (two implies far too long inline verbatim
         pattern = re.compile(r'\\code\{([^\n}]*?)\n(.*?)\}', re.DOTALL)
@@ -284,6 +288,15 @@ class _Ptex2tex:
         # now all \code{} are without backslashes and newline
         # (note that we need the 2nd group to handle } inside the code
         # argument)
+
+        pattern = re.compile(r"""\\protect\s*\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
+        if self.inline_code['font'] == 'smaller':
+            lines = pattern.sub(r'{\smaller\protect\\%s!\1!\larger{}}\2' %
+                           self.verb_command, lines)
+        else:
+            fontsize = int(self.inline_code['font'])
+            lines = pattern.sub(r'{\\fontsize{%spt}{%spt}\protect\\%s!\1!}\2' % (fontsize, fontsize, self.verb_command), lines)
+
         pattern = re.compile(r"""\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
         if self.inline_code['font'] == 'smaller':
             lines = pattern.sub(r'{\smaller\\%s!\1!\larger{}}\2' %

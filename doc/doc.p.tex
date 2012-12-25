@@ -755,25 +755,8 @@ if the \code{Minted_*} environments are desired for typesetting code.
 In addition to the keywords starting with \code{@@@} and the keywords
 associated with beginning
 and ending Ptex2tex environments, there is another keyword available,
-namely \code{\code}. This keyword can be used anywhere in the text, as
-long as it is contained within a single line. This allows the use of any
-character, we can for instance write
-\bcod
-\code{}@#_%}
-\ecod
-without \LaTeX~giving
-us any errors. The result is similar to the \code{\texttt}
-\LaTeX~command, but it has nicer typesetting of (for instance) underscores.
-The \emp{code} command is really just a slightly modified normal
-inline verbatim construction where the font size can be controlled.
-Moreover,
-the escape character in \LaTeX, which is
-\code{\}, is removed in front of the characters
-\code{'\#'}, \code{'\%'}, \code{'\@'},
-\code{'\$'} and \code{'\_'}.
-
-The \code{code} command is translated to a \code{Verb} command
-(requiring the \code{fancyvrb} package). For example
+namely \code{\code}, which is used to typeset inline verbatim code.
+By default,
 \bcod
 \code{my_func}
 \ecod
@@ -789,8 +772,10 @@ be used:
 font = 10
 verb_command = Verb
 # or
-verb_command = verb
+#verb_command = verb
 \ecod
+The \code{\code} command can be used inside captions and section headings
+if preceded by \code{\protect}.
 
 %Writing \code{\}\code{code{}\code{\%}\smaller\verb!}!\larger~results
 %in the text for the rest of the line after the character
