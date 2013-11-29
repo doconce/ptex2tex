@@ -289,6 +289,8 @@ class _Ptex2tex:
         # (note that we need the 2nd group to handle } inside the code
         # argument)
 
+        # note: \code{} cannot contain ! as this character is used as
+        # delimiter
         pattern = re.compile(r"""\\protect\s*\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
         if self.inline_code['font'] == 'smaller':
             lines = pattern.sub(r'{\smaller\protect\\%s!\1!\larger{}}\2' %
@@ -298,6 +300,13 @@ class _Ptex2tex:
             lines = pattern.sub(r'{\\fontsize{%spt}{%spt}\protect\\%s!\1!}\2' % (fontsize, fontsize, self.verb_command), lines)
 
         pattern = re.compile(r"""\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
+        for verbatim, dummy in pattern.findall(lines):
+            if '!' in verbatim:
+                print """
+*** warning: found inline verbatim "%s" containing "!", which
+    is used as delimiter in \\Verb!%s! - avoid "!" in inline verbatim
+    (or use \\emp{%s} instead or use doconce ptex2tex which handles "!")
+""" % (verbatim, verbatim, verbatim)
         if self.inline_code['font'] == 'smaller':
             lines = pattern.sub(r'{\smaller\\%s!\1!\larger{}}\2' %
                            self.verb_command, lines)
