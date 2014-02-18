@@ -307,7 +307,7 @@ class _Ptex2tex:
                     lines = re.sub(r'\code\{%s\}' % verbatim, r'{\smaller\\%s%s%s%s\larger{}}%s' % (self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter, ending), lines)
                 else:
                     fontsize = int(self.inline_code['font'])
-                    lines = re.sub(r'\code\{%s\}' % verbatim, r'{\\fontsize{%spt}{%spt}\\%s%s%s%s}%s' % (fontsize, fontsize, self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter, ending), lines)
+                    lines = re.sub(r'\\code\{%s\}' % verbatim, r'{\\fontsize{%spt}{%spt}\\%s%s%s%s}%s' % (fontsize, fontsize, self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter, ending), lines)
 
         '''
         Why do we struggle with \protect? Seems to be a special case...
