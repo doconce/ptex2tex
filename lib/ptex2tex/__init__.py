@@ -304,26 +304,40 @@ class _Ptex2tex:
     requires manual editing (or use doconce replace/subst)
 """ % (verbatim, verb_delimiter, alt_verb_delimiter)
                 if self.inline_code['font'] == 'smaller':
-                    lines = re.sub(r'\code\{%s\}' % verbatim, r'{\smaller\\%s%s%s%s\larger{}}%s' % (self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter, ending), lines)
+                    lines = re.sub(r'\\protect\s*\\code\{%s\}' % verbatim, r'{\smaller\protect\\%s%s%s%s\larger{}}' % (self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter), lines)
+                    lines = re.sub(r'\\code\{%s\}' % verbatim, r'{\smaller\\%s%s%s%s\larger{}}' % (self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter,), lines)
                 else:
                     fontsize = int(self.inline_code['font'])
-                    lines = re.sub(r'\\code\{%s\}' % verbatim, r'{\\fontsize{%spt}{%spt}\\%s%s%s%s}%s' % (fontsize, fontsize, self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter, ending), lines)
+                    if fontsize != 10:
+                        fontstr = r'{\\fontsize{%spt}{%spt}' % (fontsize, fontsize)
+                    else:
+                        fontstr = r'{'
+                    lines = re.sub(r'\\protect\s*\\code\{%s\}' % verbatim, r'%s\protect\\%s%s%s%s}' % (fontstr, self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter), lines)
+                    lines = re.sub(r'\\code\{%s\}' % verbatim, r'%s\\%s%s%s%s}' % (fontstr, self.verb_command, alt_verb_delimiter, verbatim, alt_verb_delimiter), lines)
 
-        '''
-        Why do we struggle with \protect? Seems to be a special case...
+        # Need special treatment of \protect\code such that \protect
+        # comes after fontsize and before \Verb
         pattern = re.compile(r"""\\protect\s*\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
         if self.inline_code['font'] == 'smaller':
-            lines = pattern.sub(r'{\smaller\protect\\%s!\1!\larger{}}\2' %
-                           self.verb_command, lines)
+            lines = pattern.sub(r'{\smaller\protect\\%s%s\1%s\larger{}}\2' % (self.verb_command, verb_delimiter, verb_delimiter), lines)
         else:
             fontsize = int(self.inline_code['font'])
-            lines = pattern.sub(r'{\\fontsize{%spt}{%spt}\protect\\%s!\1!}\2' % (fontsize, fontsize, self.verb_command), lines)
-        '''
+            if fontsize != 10:
+                fontstr = r'{\\fontsize{%spt}{%spt}' % (fontsize, fontsize)
+            else:
+                fontstr = r'{'
+            lines = pattern.sub(r'%s\protect\\%s%s\1%s}\2' % (fontstr, self.verb_command, verb_delimiter, verb_delimiter), lines)
+
+        pattern = re.compile(r"""\\code\{(.*?)\}([ \n,.;:?!)"'-])""", re.DOTALL)
         if self.inline_code['font'] == 'smaller':
             lines = pattern.sub(r'{\smaller\\%s%s\1%s\larger{}}\2' % (self.verb_command, verb_delimiter, verb_delimiter), lines)
         else:
             fontsize = int(self.inline_code['font'])
-            lines = pattern.sub(r'{\\fontsize{%spt}{%spt}\\%s%s\1%s}\2' % (fontsize, fontsize, self.verb_command, verb_delimiter, verb_delimiter), lines)
+            if fontsize != 10:
+                fontstr = r'{\\fontsize{%spt}{%spt}' % (fontsize, fontsize)
+            else:
+                fontstr = r'{'
+            lines = pattern.sub(r'%s\\%s%s\1%s}\2' % (fontstr, self.verb_command, verb_delimiter, verb_delimiter), lines)
 
         open(self.preoutfile, 'w').write(lines)
 
