@@ -338,6 +338,13 @@ class _Ptex2tex:
             else:
                 fontstr = r'{'
             lines = pattern.sub(r'%s\\%s%s\1%s}\2' % (fontstr, self.verb_command, verb_delimiter, verb_delimiter), lines)
+        # \Verb!...! does not cause linebreak in latex, shift to \texttt{}
+        # where possible since this will reduce overfull hboxes
+        lines = re.sub(r'\{\\Verb!([^{}_$\^#%\\]+?)!\}',
+                       r'\\texttt{\g<1>}', lines)
+        lines = re.sub(r'\{\\protect\s*\\Verb!([^{}_$\^#%\\]+?)!\}',
+                        r'\\texttt{\g<1>}', lines)
+
 
         open(self.preoutfile, 'w').write(lines)
 
