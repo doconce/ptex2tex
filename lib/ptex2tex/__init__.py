@@ -340,9 +340,9 @@ class _Ptex2tex:
             lines = pattern.sub(r'%s\\%s%s\1%s}\2' % (fontstr, self.verb_command, verb_delimiter, verb_delimiter), lines)
         # \Verb!...! does not cause linebreak in latex, shift to \texttt{}
         # where possible since this will reduce overfull hboxes
-        lines = re.sub(r'\{\\Verb!([^{}_$\^#%\\]+?)!\}',
+        lines = re.sub(r'\{\\Verb!([^{}_$\^#&%\\]+?)!\}',
                        r'\\texttt{\g<1>}', lines)
-        lines = re.sub(r'\{\\protect\s*\\Verb!([^{}_$\^#%\\]+?)!\}',
+        lines = re.sub(r'\{\\protect\s*\\Verb!([^{}_$\^#&%\\]+?)!\}',
                         r'\\texttt{\g<1>}', lines)
 
 
