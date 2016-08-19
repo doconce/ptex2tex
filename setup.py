@@ -26,7 +26,7 @@ data_files = [(latex_dir,
                [os.path.join("doc", "man", "man1", "ptex2tex.1.gz")])]
 
 out = setup(name=name,
-            version="0.4",
+            version="0.5",
             description="A filter for converting from .p.tex to .tex format",
             author="Ilmar M. Wilbers and Hans Petter Langtangen",
             author_email="hpl@simula.no",
